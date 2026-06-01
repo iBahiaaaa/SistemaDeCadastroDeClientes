@@ -1,0 +1,44 @@
+:root {
+
+    --cor0: #2b333b;
+    --cor1: #25292e;
+    --cor2: #20252c;
+    --cor3: #171b20;
+    --cor4: #ff6b00;
+
+}
+
+body {
+    background-color: var(--cor0);
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#cabeca {
+    height: 80px;
+    width: 100vw;
+    background-color: var(--cor3);
+    display: flex;
+    top: 0%;
+}
+
+#barraLateral {
+    background-color: var(--cor2);
+    width: 250px;
+    height: 100vh;
+    display: flex;
+}
+
+#cadastroClientes{
+    
+}
+
+footer {
+    height: 20px;
+    width: 100%;
+    background-color: var(--cor3);
+    position: absolute;
+    bottom: 0;
+}
