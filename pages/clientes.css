@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 :root {
 
     --cor0: #2b333b;
@@ -11,9 +13,13 @@
 body {
     background-color: var(--cor0);
     margin: 0;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+}
+
+main {
+    display: flex;
 }
 
 #cabeca {
@@ -31,14 +37,56 @@ body {
     display: flex;
 }
 
-#cadastroClientes{
-    
+#conteudoGeral {
+    flex: 1;
+}
+
+#cadastroClientes {
+    margin: 0 20px 20px 20px;
+    height: 150px;
+    background-color: var(--cor2);
+    padding: 20px;
+}
+
+#listaClientes {
+    margin: 0 20px 20px 20px;
+    height: 100vh;
+    background-color: var(--cor2);
 }
 
 footer {
     height: 20px;
     width: 100%;
-    background-color: var(--cor3);
+    background-color: var(--cor0);
     position: absolute;
     bottom: 0;
+}
+
+/* Inputs */
+
+.input {
+  color: white;
+  border: 2px solid var(--cor4);
+  border-radius: 8px;
+  padding: 10px 25px;
+  background: transparent;
+  font-size: 1em;
+  margin: 3px;
+}
+
+#inputNome{
+    width: 787px;
+}
+#inputWhatsapp{
+    width: 150px;
+}
+#inputEndereco{
+    width: 1000px;
+}
+#inputObservacoes{
+    width: 1000px;
+}
+
+.input:active {
+  box-shadow: 2px 2px 15px var(--cor4);
 }
