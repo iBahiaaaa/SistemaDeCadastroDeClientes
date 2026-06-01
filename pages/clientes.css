@@ -87,6 +87,6 @@ footer {
     width: 1000px;
 }
 
-.input:active {
-  box-shadow: 2px 2px 15px var(--cor4);
+.input:hover {
+  box-shadow: 2px 2px 10px var(--cor4);
 }
