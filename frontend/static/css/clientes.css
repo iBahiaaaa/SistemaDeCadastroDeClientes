@@ -198,8 +198,89 @@ footer {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 500px;
-    width: 500px;
-    background-color: black;
+    height: 270px;
+    width: 810px;
+    background-color: var(--cor3);
     z-index: 10000;
+    border-radius: 12px;
+    outline: 100em solid rgba(0, 0, 0, 0.90);
+    box-shadow: 3px 3px 10px black;
+    padding: 0 10px;
+}
+
+#modalTitulo {
+    text-align: center;
+    color: white;
+    text-decoration: underline var(--cor4);
+    font-size: 1.8em;
+
+}
+
+#modalNome, #modalWhatsapp, #modalEndereco, #modalObservacoes{
+    border-radius: 6px;
+    font-weight: 550;   
+    font-size: 1em;
+    padding: 3px;
+    background-color: var(--cor0);
+    color: white;
+    border: 1px solid white;
+}
+
+::placeholder{
+    color: rgba(255, 255, 255, 0.60);
+}
+
+
+#modalNome{
+    width: 571px;
+    margin: 5px;
+}
+
+#modalWhatsapp{
+    width: 200px;
+    margin: 5px 5px 5px 0;
+}
+
+#modalEndereco, #modalObservacoes{
+    width: 790px;
+    margin: 5px;
+}
+
+#botoesModal {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+#btnSalvar {
+    color: white;
+    border: 2px solid #2bff00;
+    border-radius: 8px;
+    padding: 5px;
+    background: transparent;
+    font-size: 1em;
+    width: fit-content;
+}
+
+#btnSalvar:hover{
+    background-color: #2bff002d;
+}
+
+#btnSalvar:active {
+    transform: translateY(2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+#btnCancelar {
+    color: white;
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    padding: 5px;
+    background: transparent;
+    font-size: 1em;
+    width: fit-content;
+}
+
+#btnCancelar:hover{
+    background-color: #ff00002d;
 }
