@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+    <link rel="shortcut icon" href="../static/person_add.svg" type="image/x-icon">
+</head>
+
+<body>
+    <header>
+        <section id="cabeca">
+
+        </section>
+    </header>
+    <main>
+        <section id="barraLateral">
+
+        </section>
+        <section id="conteudoGeral">
+            <section id="cadastroClientes">
+                <div id="divTituloListaClientes">
+                    <h2 id="tituloListaClientes">Clientes Cadastrados</h2>
+                    <button id="botaoCadastrar" type="submit"> <img src="../static/person_add.svg" alt=""> </button>
+                </div>
+            </section>
+            <section id="listaClientes">
+                {% for cliente in clientes %}
+                <div class="cliente">
+                    <hr id="tracoHr">
+                    <h3>{{ cliente[1] }}</h3>
+                    <span>Whatsapp: {{ cliente[2] }}</span>
+                    <span>Endereço: {{ cliente[3] }}</span>
+                    <p>Observações: {{ cliente[4] }}</p>
+                </div>
+                {% endfor %}
+            </section>
+        </section>
+    </main>
+    <footer>
+    </footer>
+    <section id="modalCadastro">
+        <div id="caixaModal">
+            <h2>Cadastrar Cliente</h2>
+            <input type="text" id="modalNome" placeholder="Nome completo">
+            <input type="tel" id="modalWhatsapp" placeholder="Whatsapp">
+            <input type="text" id="modalEndereco" placeholder="Endereço">
+            <textarea id="modalObservacoes" placeholder="Observações"></textarea>
+            <div id="botoesModal">
+                <button id="btnCancelar">Cancelar</button>
+                <button id="btnSalvar">Salvar</button>
+            </div>
+        </div>
+    </section>
+    <script src="{{ url_for('static', filename='js/clientes.js') }}"></script>
+</body>
+
+</html>

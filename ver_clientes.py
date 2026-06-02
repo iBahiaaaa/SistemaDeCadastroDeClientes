@@ -1,6 +1,6 @@
 import sqlite3
 
-conexao = sqlite3.connect("banco.db")
+conexao = sqlite3.connect("../database/banco.db")
 cursor = conexao.cursor()
 
 cursor.execute("SELECT * FROM clientes")

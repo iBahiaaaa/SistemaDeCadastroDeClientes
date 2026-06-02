@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br>
+<head>
+    <meta charset=" UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastro de Clientes</title>
+<link rel="stylesheet" href="../static/css/clientes.css">
+</head>
+
+<body>
+    <section id="conteudoGeral">
+        <section id="cadastroClientes">
+            <form action="/cadastrar" method="POST">
+                <div>
+                    <input id="inputNome" placeholder="Nome completo*" class="input" name="nome" type="text" required>
+
+                    <input id="inputWhatsapp" placeholder="Whatsapp" class="input" name="whatsapp" type="tel">
+                </div>
+                <div>
+                    <input id="inputEndereco" placeholder="Endereço" class="input" name="endereco" type="text">
+                    <button id="botaoExcluir" type="#">Excluir Cliente</button>
+                </div>
+                <div>
+                    <input id="inputObservacoes" placeholder="Observações" class="input" name="observacoes" type="text">
+                    <button id="botaoEditar" type="submit">Editar Cliente</button>
+                </div>
+            </form>
+        </section>
+    </section>
+</body>
+
+</html>
