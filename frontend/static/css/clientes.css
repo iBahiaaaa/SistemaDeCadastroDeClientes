@@ -129,6 +129,11 @@ main {
     background-color: var(--cor2);
     color: white;
     border-collapse: collapse;
+
+    td,
+    tr {
+        word-break: break-word;
+    }
 }
 
 #cabecaTabelaClientes {
@@ -143,9 +148,9 @@ main {
     background-color: var(--cor3);
 }
 
-#bodyTabelaListaClientes{
+#bodyTabelaListaClientes {
 
-    td{
+    td {
         border-right: 1px solid white;
         width: fit-content;
         font-size: 1.1em;
@@ -158,10 +163,10 @@ main {
 }
 
 #tabelaAcoes {
-    width: 150px;
+    width: 120px;
 }
 
-#btnAcoes{
+#btnAcoes {
     display: flex;
     gap: 8px;
     align-items: center;
