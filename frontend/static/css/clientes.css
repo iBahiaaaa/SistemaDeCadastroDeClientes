@@ -149,7 +149,7 @@ main {
         border-right: 1px solid white;
         width: fit-content;
         font-size: 1.1em;
-        
+        text-indent: 5px;
     }
 
     tr:nth-child(even) {
@@ -159,6 +159,12 @@ main {
 
 #tabelaAcoes {
     width: 150px;
+}
+
+#btnAcoes{
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
 .cliente {

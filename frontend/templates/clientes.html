@@ -46,16 +46,18 @@
                             <td>{{ cliente[3] }}</td>
                             <td>{{ cliente[4] }}</td>
                             <td>
-                                <button id="btnEditar" class="btnEditar" data-id="{{ cliente[0] }}"
-                                    data-nome="{{ cliente[1] }}" data-whatsapp="{{ cliente[2] }}"
-                                    data-endereco="{{ cliente[3] }}" data-observacoes="{{ cliente[4] }}">
-                                    <img src="../static/imagens/edit.svg" alt="Editar Cliente">
-                                </button>
-                                <form action="/excluir/{{ cliente[0] }}" method="POST"
-                                    onsubmit="return confirm('Tem certeza que deseja excluir este cliente?')">
-                                    <button id="btnExcluir" type="submit"><img src="../static/imagens/delete.svg"
-                                            alt="Excluir Cliente"></button>
-                                </form>
+                                <div id="btnAcoes">
+                                    <button id="btnEditar" class="btnEditar" data-id="{{ cliente[0] }}"
+                                        data-nome="{{ cliente[1] }}" data-whatsapp="{{ cliente[2] }}"
+                                        data-endereco="{{ cliente[3] }}" data-observacoes="{{ cliente[4] }}">
+                                        <img src="../static/imagens/edit.svg" alt="Editar Cliente">
+                                    </button>
+                                    <form action="/excluir/{{ cliente[0] }}" method="POST"
+                                        onsubmit="return confirm('Tem certeza que deseja excluir este cliente?')">
+                                        <button id="btnExcluir" type="submit"><img src="../static/imagens/delete.svg"
+                                                alt="Excluir Cliente"></button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
