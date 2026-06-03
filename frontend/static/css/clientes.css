@@ -73,43 +73,38 @@ main {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-#botaoEditar {
+#btnEditar {
     color: white;
     border: 2px solid #fbff00;
     border-radius: 8px;
-    padding: 10px 25px;
+    padding: 0px 10px;
     background: transparent;
     font-size: 1em;
-    margin-left: 30px;
-    width: 190px;
 }
 
-#botaoEditar:hover {
-    box-shadow: 1px 1px 10px #fbff00;
+#btnEditar:hover {
     background-color: #fbff002d;
 }
 
-#botaoEditar:active {
+#btnEditar:active {
     transform: translateY(2px);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-#botaoExcluir {
+#btnExcluir {
     color: white;
     border: 2px solid #ff0000;
     border-radius: 8px;
-    padding: 10px 25px;
+    padding: 0px 10px;
     background: transparent;
     font-size: 1em;
-    width: 190px;
 }
 
-#botaoExcluir:hover {
-    box-shadow: 1px 1px 10px #ff0000;
+#btnExcluir:hover {
     background-color: #ff00002d;
 }
 
-#botaoExcluir:active {
+#btnExcluir:active {
     transform: translateY(2px);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
@@ -123,11 +118,47 @@ main {
     text-align: center;
 }
 
-#listaClientes {
-    margin: 0 20px 0 20px;
+#conteudoTabelaListaClientes {
     height: calc(100vh - 185px);
-    background-color: var(--cor2);
     overflow-y: auto;
+    margin-left: 20px;
+}
+
+#tabelaListaClientes {
+    width: 100%;
+    background-color: var(--cor2);
+    color: white;
+    border-collapse: collapse;
+}
+
+#cabecaTabelaClientes {
+    background-color: var(--cor3);
+    font-size: 1.3em;
+}
+
+#cabecaTabelaClientes th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--cor3);
+}
+
+#bodyTabelaListaClientes{
+
+    td{
+        border-right: 1px solid white;
+        width: fit-content;
+        font-size: 1.1em;
+        
+    }
+
+    tr:nth-child(even) {
+        background-color: var(--cor3);
+    }
+}
+
+#tabelaAcoes {
+    width: 150px;
 }
 
 .cliente {
@@ -203,9 +234,21 @@ footer {
     background-color: var(--cor3);
     z-index: 10000;
     border-radius: 12px;
-    outline: 100em solid rgba(0, 0, 0, 0.90);
+    /* outline: 100em solid rgba(0, 0, 0, 0.90); */
     box-shadow: 3px 3px 10px black;
     padding: 0 10px;
+}
+
+#overlayModal {
+    display: none;
+}
+
+#overlayModal.ativo {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.80);
+    z-index: 9999;
 }
 
 #modalTitulo {
@@ -216,9 +259,12 @@ footer {
 
 }
 
-#modalNome, #modalWhatsapp, #modalEndereco, #modalObservacoes{
+#modalNome,
+#modalWhatsapp,
+#modalEndereco,
+#modalObservacoes {
     border-radius: 6px;
-    font-weight: 550;   
+    font-weight: 550;
     font-size: 1em;
     padding: 3px;
     background-color: var(--cor0);
@@ -226,22 +272,23 @@ footer {
     border: 1px solid white;
 }
 
-::placeholder{
+::placeholder {
     color: rgba(255, 255, 255, 0.60);
 }
 
 
-#modalNome{
+#modalNome {
     width: 571px;
     margin: 5px;
 }
 
-#modalWhatsapp{
+#modalWhatsapp {
     width: 200px;
     margin: 5px 5px 5px 0;
 }
 
-#modalEndereco, #modalObservacoes{
+#modalEndereco,
+#modalObservacoes {
     width: 790px;
     margin: 5px;
 }
@@ -262,7 +309,7 @@ footer {
     width: fit-content;
 }
 
-#btnSalvar:hover{
+#btnSalvar:hover {
     background-color: #2bff002d;
 }
 
@@ -281,6 +328,6 @@ footer {
     width: fit-content;
 }
 
-#btnCancelar:hover{
+#btnCancelar:hover {
     background-color: #ff00002d;
 }

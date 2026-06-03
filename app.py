@@ -2,7 +2,8 @@ import sqlite3
 from flask import Flask, render_template, request, redirect
 from backend.controllers.cliente_controller import (
     cadastrar_cliente,
-    listar_clientes
+    listar_clientes,
+    deletar_cliente
 )
 
 app = Flask(
@@ -25,6 +26,11 @@ def inicio():
 def cadastrar():
 
     return cadastrar_cliente()
+
+@app.route("/excluir/<int:id_cliente>", methods=["POST"])
+def excluir(id_cliente):
+
+    return deletar_cliente(id_cliente)
     
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5001, debug=True)

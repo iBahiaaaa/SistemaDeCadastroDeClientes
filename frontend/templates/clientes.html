@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clientes</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
-    <link rel="shortcut icon" href="../static/person_add.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../static/imagens/person_add.svg" type="image/x-icon">
 </head>
 
 <body>
@@ -23,20 +23,45 @@
             <section id="cadastroClientes">
                 <div id="divTituloListaClientes">
                     <h2 id="tituloListaClientes">Clientes Cadastrados</h2>
-                    <button id="botaoCadastrar" type="submit"> <img src="../static/person_add.svg" alt=""> </button>
+                    <button id="botaoCadastrar" type="submit"> <img src="../static/imagens/person_add.svg" alt="">
+                    </button>
                 </div>
             </section>
-            <section id="listaClientes">
-                {% for cliente in clientes %}
-                <div class="cliente">
-                    <hr id="tracoHr">
-                    <h3>{{ cliente[1] }}</h3>
-                    <span>Whatsapp: {{ cliente[2] }}</span>
-                    <span>Endereço: {{ cliente[3] }}</span>
-                    <p>Observações: {{ cliente[4] }}</p>
-                </div>
-                {% endfor %}
-            </section>
+            <div id="conteudoTabelaListaClientes">
+                <table id="tabelaListaClientes">
+                    <thead id="cabecaTabelaClientes">
+                        <tr>
+                            <th id="tabelaNome">Nome</th>
+                            <th>Whatsapp</th>
+                            <th>Endereço</th>
+                            <th>Observações</th>
+                            <th id="tabelaAcoes">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTabelaListaClientes">
+                        {% for cliente in clientes %}
+                        <tr id="clienteIndividual">
+                            <td>{{ cliente[1] }}</td>
+                            <td>{{ cliente[2] }}</td>
+                            <td>{{ cliente[3] }}</td>
+                            <td>{{ cliente[4] }}</td>
+                            <td>
+                                <button id="btnEditar" class="btnEditar" data-id="{{ cliente[0] }}"
+                                    data-nome="{{ cliente[1] }}" data-whatsapp="{{ cliente[2] }}"
+                                    data-endereco="{{ cliente[3] }}" data-observacoes="{{ cliente[4] }}">
+                                    <img src="../static/imagens/edit.svg" alt="Editar Cliente">
+                                </button>
+                                <form action="/excluir/{{ cliente[0] }}" method="POST"
+                                    onsubmit="return confirm('Tem certeza que deseja excluir este cliente?')">
+                                    <button id="btnExcluir" type="submit"><img src="../static/imagens/delete.svg"
+                                            alt="Excluir Cliente"></button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </section>
     </main>
     <footer>
@@ -45,16 +70,19 @@
         <div id="caixaModal">
             <h2 id="modalTitulo">Cadastrar Cliente</h2>
             <form action="/cadastrar" method="POST">
+                <input type="hidden" name="id_cliente" id="id_cliente">
                 <input type="text" id="modalNome" name="nome" placeholder="Nome do aluno*" required>
                 <input type="tel" id="modalWhatsapp" name="whatsapp" placeholder="Whatsapp">
                 <input type="text" id="modalEndereco" name="endereco" placeholder="Endereço">
                 <input id="modalObservacoes" name="observacoes" placeholder="Observações">
                 <div id="botoesModal">
                     <button type="submit" id="btnSalvar">Salvar</button>
-                    <button type="button" id="btnCancelar">Cancelar</button>
+                    <button type="button" id="btnCancelar">Fechar</button>
                 </div>
             </form>
         </div>
+    </section>
+    <section id="overlayModal">
     </section>
     <script src="{{ url_for('static', filename='js/clientes.js') }}"></script>
 </body>
