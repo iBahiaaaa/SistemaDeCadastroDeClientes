@@ -37,8 +37,57 @@ main {
 
 #barraLateral {
     background-color: var(--cor2);
-    width: 250px;
+    width: 60px;
     height: calc(100vh - 105px);
+    transition: width 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+
+    h1 {
+        font-size: 1.7em;
+        color: white;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-shadow: 0 0 3px black;
+    }
+
+    h1:hover{
+        background-color: var(--cor4);
+    }
+
+    img{
+        margin-left: 15px;
+        margin-right: 30px;
+    }
+}
+
+#barraLateral:hover {
+    width: 250px;
+    animation-duration: 1s;
+
+    img{
+        margin-right: 30px;
+        animation-duration: 1s;
+    }
+}
+
+#paginaAtual{
+    background-color: var(--cor4);
+}
+
+#sairLateral{
+    background-color: #ff0000;
+    margin-top: auto;
+}
+
+#sairLateral:hover{
+    background-color: #ce0000;
+
+    h1{
+        background-color: #ce0000;
+    }
 }
 
 #conteudoGeral {
@@ -64,7 +113,6 @@ main {
 }
 
 #botaoCadastrar:hover {
-    box-shadow: 1px 1px 10px #2bff00;
     background-color: #2bff002d;
 }
 
@@ -129,6 +177,7 @@ main {
     background-color: var(--cor2);
     color: white;
     border-collapse: collapse;
+    table-layout: auto;
 
     td,
     tr {
@@ -152,14 +201,25 @@ main {
 
     td {
         border-right: 1px solid white;
-        width: fit-content;
+        width: min-content;
         font-size: 1.1em;
-        text-indent: 5px;
+        padding: 0 8px 0 8px;
     }
 
     tr:nth-child(even) {
         background-color: var(--cor3);
     }
+}
+
+#clienteIndividual {
+
+    td {
+        height: 50px;
+    }
+}
+
+td#nomeCliente {
+    width: 250px;
 }
 
 #tabelaAcoes {

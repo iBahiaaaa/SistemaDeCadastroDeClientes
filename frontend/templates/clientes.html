@@ -17,14 +17,27 @@
     </header>
     <main>
         <section id="barraLateral">
-
+            <div>
+                <h1 id="paginaAtual"><img src="../static/imagens/group.svg" alt="Clientes">Clientes</h1>
+                <h1><img src="../static/imagens/card.svg" alt="Planos">Planos</h1>
+                <h1><img src="../static/imagens/money.svg" alt="Pagamentos">Pagamentos</h1>
+                <h1><img src="../static/imagens/warning.svg" alt="Inadimplência">Inadimplência</h1>
+                <h1><img src="../static/imagens/halter.svg" alt="Treinos">Treinos</h1>
+                <h1><img src="../static/imagens/prancheta.svg" alt="Avaliação">Avaliação</h1>
+                <h1><img src="../static/imagens/personCheck.svg" alt="Frequência">Frequência</h1>
+                <h1><img src="../static/imagens/work.svg" alt="Funcionários">Funcionários</h1>
+                <h1><img src="../static/imagens/relatorios.svg" alt="Relatórios">Relatórios</h1>
+                <h1><img src="../static/imagens/settings.svg" alt="Configuração">Configuração</h1>
+            </div>
+            <div id="sairLateral">
+                <h1><img src="../static/imagens/sair.svg" alt="Sair">Sair</h1>
+            </div>
         </section>
         <section id="conteudoGeral">
             <section id="cadastroClientes">
                 <div id="divTituloListaClientes">
                     <h2 id="tituloListaClientes">Clientes Cadastrados</h2>
-                    <button id="botaoCadastrar" type="submit"> <img src="../static/imagens/person_add.svg" alt="">
-                    </button>
+                    <button title="Cadastrar novo cliente" id="botaoCadastrar" type="submit"><img src="../static/imagens/person_add.svg" alt=""></button>
                 </div>
             </section>
             <div id="conteudoTabelaListaClientes">
@@ -46,14 +59,14 @@
                             <td>{{ cliente[3] }}</td>
                             <td>{{ cliente[4] }}</td>
                             <td id="btnAcoes">
-                                    <button id="btnEditar" class="btnEditar" data-id="{{ cliente[0] }}"
+                                    <button title="Editar Cliente" id="btnEditar" class="btnEditar" data-id="{{ cliente[0] }}"
                                         data-nome="{{ cliente[1] }}" data-whatsapp="{{ cliente[2] }}"
                                         data-endereco="{{ cliente[3] }}" data-observacoes="{{ cliente[4] }}">
                                         <img src="../static/imagens/edit.svg" alt="Editar Cliente">
                                     </button>
                                     <form action="/excluir/{{ cliente[0] }}" method="POST"
                                         onsubmit="return confirm('Tem certeza que deseja excluir este cliente?')">
-                                        <button id="btnExcluir" type="submit"><img src="../static/imagens/delete.svg"
+                                        <button title="Excluir Cliente" id="btnExcluir" type="submit"><img src="../static/imagens/delete.svg"
                                                 alt="Excluir Cliente"></button>
                                     </form>
                             </td>
