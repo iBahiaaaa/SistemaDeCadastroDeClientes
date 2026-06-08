@@ -78,3 +78,20 @@ document.querySelectorAll(".btnEditar").forEach(btn => {
 });
 
 // Fim do editar
+
+const whatsapp = document.getElementById("modalWhatsapp");
+
+if (whatsapp){
+    whatsapp.addEventListener("input", () => {
+        let valor = whatsapp.value.replace(/\D/g, "");
+
+        valor = valor.substring(0, 11);
+
+        valor = valor.replace(
+            /^(\d{2})(\d{5})(\d{0,4})$/,
+            "($1) $2-$3"
+        );
+
+        whatsapp.value = valor;
+    });
+}

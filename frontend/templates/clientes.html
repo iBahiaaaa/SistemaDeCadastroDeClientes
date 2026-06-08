@@ -57,11 +57,11 @@
                     <tbody id="bodyTabelaListaClientes">
                         {% for cliente in clientes %}
                         <tr id="clienteIndividual">
-                            <td>{{ cliente[1] }}</td>
-                            <td>{{ cliente[2] }}</td>
-                            <td>{{ cliente[3] }}</td>
-                            <td>{{ cliente[4] }}</td>
-                            <td id="btnAcoes">
+                            <td data-label="Nome">{{ cliente[1] }}</td>
+                            <td data-label="Whatsapp">{{ cliente[2] }}</td>
+                            <td data-label="Endereço">{{ cliente[3] }}</td>
+                            <td data-label="Observações">{{ cliente[4] }}</td>
+                            <td data-label="Ações" id="btnAcoes">
                                     <button title="Editar Cliente" id="btnEditar" class="btnEditar" data-id="{{ cliente[0] }}"
                                         data-nome="{{ cliente[1] }}" data-whatsapp="{{ cliente[2] }}"
                                         data-endereco="{{ cliente[3] }}" data-observacoes="{{ cliente[4] }}">
