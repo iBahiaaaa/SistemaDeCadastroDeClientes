@@ -158,11 +158,20 @@ main {
     width: min-content;
     font-size: 1.1em;
     padding: 0 8px 0 8px;
-    height: 40px;
 }
 
 #bodyTabelaListaClientes tr:nth-child(even) {
     background-color: var(--cor3);
+}
+
+.clienteIndividual {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.clienteIndividual:hover {
+    background-color: var(--cor4) !important;
+    text-shadow: 0 0 3px black;
 }
 
 .clienteIndividual td {
@@ -173,34 +182,12 @@ td#nomeCliente {
     width: 250px;
 }
 
-#colNome {
-    width: 400px;
-}
-
-#colWhatsapp {
-    width: 180px;
-    text-align: center;
-}
-
-#colMatricula {
-    width: 150px;
-    text-align: center;
-}
-
-#colPlano {
-    width: 150px;
-    text-align: center;
-}
-
-#colVencimento {
-    width: 110px;
-    text-align: center;
-}
-
-#colStatus {
-    width: 110px;
-    text-align: center;
-}
+#colNome { width: 400px; }
+#colWhatsapp { width: 180px; text-align: center; }
+#colMatricula { width: 150px; text-align: center; }
+#colPlano { width: 150px; text-align: center; }
+#colVencimento { width: 110px; text-align: center; }
+#colStatus { width: 110px; text-align: center; }
 
 .whatsapp-cell {
     display: flex;
@@ -222,48 +209,9 @@ td#nomeCliente {
     transform: scale(1.2);
 }
 
-#tabelaAcoes {
-    width: 120px;
-}
-
-#btnAcoes {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-/* Botões de Ação na Tabela */
-#btnEditar {
-    color: white;
-    border: 2px solid #fbff00;
-    border-radius: 8px;
-    padding: 0px 10px;
-    background: transparent;
-    font-size: 1em;
-}
-
-#btnEditar:hover {
-    background-color: #fbff002d;
-}
-
-#btnExcluir {
-    color: white;
-    border: 2px solid #ff0000;
-    border-radius: 8px;
-    padding: 0px 10px;
-    background: transparent;
-    font-size: 1em;
-}
-
-#btnExcluir:hover {
-    background-color: #ff00002d;
-}
-
-#btnEditar:active,
-#btnExcluir:active,
-#botaoCadastrar:active {
-    transform: translateY(2px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+/* Botões de Ação na Tabela (Removidos em favor do clique na linha) */
+#tabelaAcoes, #btnAcoes {
+    display: none !important;
 }
 
 /* Botão Cadastrar Cliente */
@@ -282,11 +230,16 @@ td#nomeCliente {
     white-space: nowrap;
     overflow: hidden;
     transition: width 0.3s ease;
+    cursor: pointer;
 }
 
 #botaoCadastrar:hover {
     background-color: #2bff002d;
     width: 180px;
+}
+
+#botaoCadastrar:active {
+    transform: translateY(2px);
 }
 
 /* Inputs e Formulários */
@@ -298,23 +251,6 @@ td#nomeCliente {
     background: transparent;
     font-size: 1em;
     margin: 3px;
-}
-
-.input:hover {
-    box-shadow: 2px 2px 10px var(--cor4);
-}
-
-#inputNome {
-    width: 787px;
-}
-
-#inputWhatsapp {
-    width: 150px;
-}
-
-#inputEndereco,
-#inputObservacoes {
-    width: 1000px;
 }
 
 /* Modal e Overlay */
@@ -338,21 +274,6 @@ td#nomeCliente {
     padding: 20px;
     flex-direction: column;
     overflow-y: auto;
-
-    #selectAtivo {
-        background-color: green;
-        text-align: center;
-    }
-
-    #selectInativo {
-        background-color: red;
-        text-align: center;
-    }
-
-    #selectPendente {
-        background-color: orange;
-        text-align: center;
-    }
 }
 
 .modal-row {
@@ -397,19 +318,10 @@ td#nomeCliente {
     color: white;
     text-decoration: underline var(--cor4);
     font-size: 1.8em;
-    margin-top: 0;
 }
 
-#modalNome,
-#modalWhatsapp,
-#modalEndereco,
-#modalEmergencia,
-#modalPlano,
-#modalValorPlano,
-#modalStatus,
-#modalMatricula,
-#modalVencimento,
-#modalObservacoes {
+#modalNome, #modalWhatsapp, #modalEndereco, #modalEmergencia, #modalPlano, 
+#modalValorPlano, #modalStatus, #modalMatricula, #modalVencimento, #modalObservacoes {
     border-radius: 6px;
     font-weight: 550;
     font-size: 1em;
@@ -417,29 +329,15 @@ td#nomeCliente {
     background-color: var(--cor0);
     color: white;
     border: 1px solid white;
-    box-sizing: border-box;
 }
 
 #modalObservacoes {
     width: 100%;
     min-height: 80px;
     resize: vertical;
-    margin-bottom: 60px;
-    /* Espaço para os botões fixos */
-}
-
-.clienteIndividual {
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.clienteIndividual:hover {
-    background-color: var(--cor4) !important;
-    text-shadow: 0 0 3px black;
 }
 
 #botoesModal {
-    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -466,20 +364,14 @@ td#nomeCliente {
     background-color: #ff00002d;
 }
 
-/* Removendo estilos antigos de ações */
-#tabelaAcoes,
-#btnAcoes {
-    display: none !important;
-}
-
 #btnSalvar {
     color: white;
     border: 2px solid #2bff00;
     border-radius: 8px;
-    padding: 5px;
+    padding: 8px 15px;
     background: transparent;
     font-size: 1em;
-    width: fit-content;
+    cursor: pointer;
 }
 
 #btnSalvar:hover {
@@ -490,10 +382,14 @@ td#nomeCliente {
     color: white;
     border: 2px solid #ff0000;
     border-radius: 8px;
-    padding: 5px;
+    padding: 8px 15px;
     background: transparent;
     font-size: 1em;
-    width: fit-content;
+    cursor: pointer;
+}
+
+#btnCancelar:hover {
+    background-color: #ff00002d;
 }
 
 /* Cores de Status */
@@ -518,52 +414,11 @@ td#nomeCliente {
     font-weight: bold;
 }
 
-/* Ajustes no modal para os novos status */
-#modalStatus option[value="Pago"] {
-    background-color: #008000;
-}
-
-#modalStatus option[value="Pendente"] {
-    background-color: #808000;
-}
-
-#modalStatus option[value="Inadimplente"] {
-    background-color: #800000;
-}
-
-/* Responsividade Mobile - Ajuste no card de status */
-@media (max-width: 768px) {
-    .clienteIndividual td[data-label="Status"] {
-        font-weight: bold;
-    }
-}
-
 /* Footer */
 footer {
     height: 20px;
     width: 100%;
     background-color: var(--cor0);
-    position: absolute;
-    bottom: 0;
-}
-
-/* Outros Componentes (Classes Genéricas) */
-.cliente {
-    background-color: var(--cor2);
-    padding-left: 30px;
-    border-radius: 8px;
-    color: white;
-    height: fit-content;
-}
-
-.cliente h3 {
-    margin: 0 0 3px 0;
-    text-decoration: underline var(--cor4);
-    font-size: 1.5em;
-}
-
-.cliente span {
-    margin-right: 10px;
 }
 
 /* Responsividade Mobile */
@@ -652,15 +507,11 @@ footer {
         bottom: 70px;
         border-color: transparent;
         background-color: var(--cor4);
+        z-index: 1001;
     }
 
     #botaoCadastrar:hover {
         width: 40px !important;
-        background-color: transparent;
-    }
-
-    #botaoCadastrar:active {
-        box-shadow: none;
     }
 
     #conteudoTabelaListaClientes {
@@ -670,7 +521,6 @@ footer {
         height: auto;
         overflow-y: visible;
         overflow-x: hidden;
-        /* Evita scroll lateral no mobile */
     }
 
     /* Tabela Mobile */
@@ -699,10 +549,6 @@ footer {
         border-radius: 8px;
         overflow: hidden;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    }
-
-    #bodyTabelaListaClientes tr:nth-child(even) {
-        background-color: var(--cor2);
     }
 
     .clienteIndividual:hover {
@@ -760,106 +606,37 @@ footer {
         justify-content: flex-end;
     }
 
-    #btnAcoes::before {
-        content: none;
-    }
-
-    #btnAcoes {
-        justify-content: center !important;
-        gap: 10px !important;
-        padding: 15px !important;
-        display: flex !important;
-    }
-
-    #btnAcoes>button,
-    #btnAcoes>form {
-        flex: 1 !important;
-        margin: 0 !important;
-        display: flex !important;
-    }
-
-    #btnEditar,
-    #btnExcluir {
-        width: 100% !important;
-        height: 45px !important;
-        padding: 0 !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        box-sizing: border-box !important;
-        border-width: 2px !important;
-    }
-
     /* Modal Mobile */
     #modalCadastro.ativo {
         width: 95% !important;
-        height: auto !important;
-        max-height: 90vh;
-        overflow-y: auto;
-        min-height: 300px;
-        flex-direction: column;
         padding: 15px;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
     }
 
     .modal-row {
         flex-direction: column;
         gap: 10px;
-        margin-bottom: 10px;
     }
 
-    #modalNome,
-    #modalWhatsapp,
-    #modalEndereco,
-    #modalEmergencia,
-    #modalPlano,
-    #modalValorPlano,
-    #modalStatus,
-    #modalMatricula,
-    #modalVencimento,
-    #modalObservacoes,
-    .input,
-    #inputNome,
-    #inputWhatsapp,
-    #inputEndereco,
-    #inputObservacoes {
+    #modalNome, #modalWhatsapp, #modalEndereco, #modalEmergencia, #modalPlano, 
+    #modalValorPlano, #modalStatus, #modalMatricula, #modalVencimento, #modalObservacoes {
         width: 100% !important;
         margin: 0 !important;
-        box-sizing: border-box;
-    }
-
-    #cadastroClientes form div {
-        display: flex;
-        flex-direction: column;
-    }
-
-    #cadastroClientes {
-        background-color: var(--cor2);
-        border: 1px solid var(--cor3);
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    }
-
-    #botaoExcluir,
-    #botaoEditar {
-        width: 100%;
-        margin: 5px 0;
     }
 
     #botoesModal {
-        position: static;
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
+        flex-direction: column;
+        gap: 10px;
     }
 
-    #btnSalvar,
-    #btnCancelar {
-        flex: 1;
-        margin: 0 5px;
+    #botoesDireitaModal {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #btnSalvar, #btnCancelar, .btnExcluir {
+        width: 100% !important;
+        margin: 0 !important;
     }
 
     footer {
