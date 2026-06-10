@@ -1,20 +1,29 @@
-import sqlite3
+from backend.database.connection import execute_query
 
-conexao = sqlite3.connect("banco.db")
+def inicializar_banco():
+    """
+    Cria a tabela de clientes se ela não existir.
+    Usa a estrutura centralizada de conexão.
+    """
+    query = """
+    CREATE TABLE IF NOT EXISTS clientes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        whatsapp TEXT,
+        endereco TEXT,
+        plano TEXT,
+        valor_plano REAL,
+        data_matricula TEXT,
+        data_vencimento TEXT,
+        contato_emergencia TEXT,
+        status TEXT,
+        observacoes TEXT
+    )
+    """
+    if execute_query(query):
+        print("Banco de dados e tabela 'clientes' inicializados com sucesso!")
+    else:
+        print("Erro ao inicializar o banco de dados.")
 
-cursor = conexao.cursor()
-
-cursor.execute("""
-CREATE TABLE clientes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT NOT NULL,
-    whatsapp TEXT,
-    endereco TEXT,
-    observacoes TEXT
-)
-""")
-
-conexao.commit()
-conexao.close()
-
-print("Banco criado com sucesso!")
+if __name__ == "__main__":
+    inicializar_banco()

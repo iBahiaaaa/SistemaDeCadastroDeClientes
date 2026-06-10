@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clientes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
     <link rel="shortcut icon" href="../static/imagens/person_add.svg" type="image/x-icon">
 </head>
@@ -47,32 +48,47 @@
                 <table id="tabelaListaClientes">
                     <thead id="cabecaTabelaClientes">
                         <tr>
-                            <th id="tabelaNome">Nome</th>
-                            <th>Whatsapp</th>
-                            <th>Endereço</th>
+                            <th id="colNome">Nome</th>
+                            <th id="colWhatsapp">Whatsapp</th>
+                            <th id="colMatricula">Matricula</th>
+                            <th id="colPlano">Plano</th>
+                            <th id="colVencimento">Vencimento</th>
+                            <th id="colStatus">Status</th>
                             <th>Observações</th>
-                            <th id="tabelaAcoes">Ações</th>
                         </tr>
                     </thead>
                     <tbody id="bodyTabelaListaClientes">
                         {% for cliente in clientes %}
-                        <tr id="clienteIndividual">
-                            <td>{{ cliente[1] }}</td>
-                            <td>{{ cliente[2] }}</td>
-                            <td>{{ cliente[3] }}</td>
-                            <td>{{ cliente[4] }}</td>
-                            <td id="btnAcoes">
-                                    <button title="Editar Cliente" id="btnEditar" class="btnEditar" data-id="{{ cliente[0] }}"
-                                        data-nome="{{ cliente[1] }}" data-whatsapp="{{ cliente[2] }}"
-                                        data-endereco="{{ cliente[3] }}" data-observacoes="{{ cliente[4] }}">
-                                        <img src="../static/imagens/edit.svg" alt="Editar Cliente">
-                                    </button>
-                                    <form action="/excluir/{{ cliente[0] }}" method="POST"
-                                        onsubmit="return confirm('Tem certeza que deseja excluir este cliente?')">
-                                        <button title="Excluir Cliente" id="btnExcluir" type="submit"><img src="../static/imagens/delete.svg"
-                                                alt="Excluir Cliente"></button>
-                                    </form>
+                        <tr class="clienteIndividual" data-id="{{ cliente['id'] }}" data-nome="{{ cliente['nome'] }}"
+                            data-whatsapp="{{ cliente['whatsapp'] }}" data-endereco="{{ cliente['endereco'] }}"
+                            data-plano="{{ cliente['plano'] }}" data-valor="{{ cliente['valor_plano'] }}"
+                            data-matricula="{{ cliente['data_matricula'] }}"
+                            data-vencimento="{{ cliente['data_vencimento'] }}"
+                            data-emergencia="{{ cliente['contato_emergencia'] }}" data-status="{{ cliente['status'] }}"
+                            data-observacoes="{{ cliente['observacoes'] }}">
+
+                            <td data-label="Nome">{{ cliente['nome'] }}</td>
+                            <td data-label="Whatsapp">
+                                <div class="whatsapp-cell">
+                                    <span>{{ cliente['whatsapp'] }}</span>
+                                    <a href="https://wa.me/55{{ cliente['whatsapp'] | replace('(', '') | replace(')', '') | replace('-', '') | replace(' ', '') }}" 
+                                       target="_blank" 
+                                       class="whatsapp-link" 
+                                       onclick="event.stopPropagation();" 
+                                       title="Conversar no WhatsApp">
+                                        <i class="fa-brands fa-whatsapp"></i>
+                                    </a>
+                                </div>
                             </td>
+                            <td data-label="Matricula">{{ cliente['data_matricula'] | formatar_data }}</td>
+                            <td data-label="Plano">{{ cliente['plano'] }}</td>
+                            <td data-label="Vencimento">{{ cliente['data_vencimento'] | formatar_data }}</td>
+                            <td data-label="Status" class="{% if cliente['status'] == 'Pago' %}
+                                status-pago{% elif cliente['status'] == 'Pendente' %}
+                                status-pendente{% elif cliente['status'] == 'Inadimplente' %}
+                                status-inadimplente{% endif %}">
+                                {{ cliente['status'] }}</td>
+                            <td data-label="Observações">{{ cliente['observacoes'] }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -87,17 +103,48 @@
             <h2 id="modalTitulo">Cadastrar Cliente</h2>
             <form action="/cadastrar" method="POST">
                 <input type="hidden" name="id_cliente" id="id_cliente">
-                <input type="text" id="modalNome" name="nome" placeholder="Nome do aluno*" required>
-                <input type="tel" id="modalWhatsapp" name="whatsapp" placeholder="Whatsapp">
-                <input type="text" id="modalEndereco" name="endereco" placeholder="Endereço">
-                <input id="modalObservacoes" name="observacoes" placeholder="Observações">
+                <div class="modal-row">
+                    <input type="text" id="modalNome" name="nome" placeholder="Nome do aluno*" required>
+                    <input type="tel" id="modalWhatsapp" name="whatsapp" placeholder="Whatsapp">
+                </div>
+                <div class="modal-row">
+                    <input type="text" id="modalEndereco" name="endereco" placeholder="Endereço">
+                    <input type="text" id="modalEmergencia" name="contato_emergencia"
+                        placeholder="Contato de Emergência">
+                </div>
+                <div class="modal-row">
+                    <input type="text" id="modalPlano" name="plano" placeholder="Plano (ex: Mensal)">
+                    <input type="text" id="modalValorPlano" name="valor_plano" placeholder="Valor do Plano">
+                    <select id="modalStatus" name="status">
+                        <option value="Pago">Pago</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Inadimplente">Inadimplente</option>
+                    </select>
+                </div>
+                <div class="modal-row">
+                    <div class="input-group">
+                        <label for="modalMatricula">Data Matrícula</label>
+                        <input type="date" id="modalMatricula" name="data_matricula">
+                    </div>
+                    <div class="input-group">
+                        <label for="modalVencimento">Data Vencimento</label>
+                        <input type="date" id="modalVencimento" name="data_vencimento">
+                    </div>
+                </div>
+                <textarea id="modalObservacoes" name="observacoes" placeholder="Observações"></textarea>
                 <div id="botoesModal">
-                    <button type="submit" id="btnSalvar">Salvar</button>
-                    <button type="button" id="btnCancelar">Fechar</button>
+                    <button type="button" id="btnExcluirModal" class="btnExcluir"
+                        style="display: none;">Excluir</button>
+                    <div id="botoesDireitaModal">
+                        <button type="submit" id="btnSalvar">Salvar</button>
+                        <button type="button" id="btnCancelar">Fechar</button>
+                    </div>
                 </div>
             </form>
         </div>
     </section>
+    <form id="formExcluirOculto" method="POST" style="display: none;">
+    </form>
     <section id="overlayModal">
     </section>
     <script src="{{ url_for('static', filename='js/clientes.js') }}"></script>

@@ -1,61 +1,164 @@
-import sqlite3
+from backend.database.connection import execute_query
 
 
 def salvar_cliente(
     nome,
     whatsapp,
     endereco,
+    plano,
+    valor_plano,
+    data_matricula,
+    data_vencimento,
+    contato_emergencia,
+    status,
     observacoes
 ):
+    """
+    Insere um novo cliente no banco de dados.
+    """
 
-    conexao = sqlite3.connect("backend/database/banco.db")
-    cursor = conexao.cursor()
+    query = """
+        INSERT INTO clientes (
+            nome,
+            whatsapp,
+            endereco,
+            plano,
+            valor_plano,
+            data_matricula,
+            data_vencimento,
+            contato_emergencia,
+            status,
+            observacoes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
 
-    cursor.execute("""
-        INSERT INTO clientes
-        (nome, whatsapp, endereco, observacoes)
-        VALUES (?, ?, ?, ?)
-    """, (nome, whatsapp, endereco, observacoes))
+    params = (
+        nome,
+        whatsapp,
+        endereco,
+        plano,
+        valor_plano,
+        data_matricula,
+        data_vencimento,
+        contato_emergencia,
+        status,
+        observacoes
+    )
 
-    conexao.commit()
-    conexao.close()
-    
+    return execute_query(query, params)
+
+
 def buscar_clientes():
+    """
+    Retorna todos os clientes cadastrados.
+    """
 
-    conexao = sqlite3.connect("backend/database/banco.db")
-    cursor = conexao.cursor()
+    query = """
+        SELECT
+            id,
+            nome,
+            whatsapp,
+            endereco,
+            plano,
+            valor_plano,
+            data_matricula,
+            data_vencimento,
+            contato_emergencia,
+            status,
+            observacoes
+        FROM clientes
+        ORDER BY nome
+    """
 
-    cursor.execute("SELECT * FROM clientes")
+    return execute_query(query, is_select=True)
 
-    clientes = cursor.fetchall()
 
-    conexao.close()
+def buscar_cliente_por_id(id_cliente):
+    """
+    Busca um cliente específico pelo ID.
+    """
 
-    return clientes
+    query = """
+        SELECT
+            id,
+            nome,
+            whatsapp,
+            endereco,
+            plano,
+            valor_plano,
+            data_matricula,
+            data_vencimento,
+            contato_emergencia,
+            status,
+            observacoes
+        FROM clientes
+        WHERE id = ?
+    """
+
+    resultado = execute_query(query, (id_cliente,), is_select=True)
+
+    if resultado:
+        return resultado[0]
+
+    return None
+
+
+def atualizar_cliente(
+    id_cliente,
+    nome,
+    whatsapp,
+    endereco,
+    plano,
+    valor_plano,
+    data_matricula,
+    data_vencimento,
+    contato_emergencia,
+    status,
+    observacoes
+):
+    """
+    Atualiza um cliente existente.
+    """
+
+    query = """
+        UPDATE clientes
+        SET
+            nome = ?,
+            whatsapp = ?,
+            endereco = ?,
+            plano = ?,
+            valor_plano = ?,
+            data_matricula = ?,
+            data_vencimento = ?,
+            contato_emergencia = ?,
+            status = ?,
+            observacoes = ?
+        WHERE id = ?
+    """
+
+    params = (
+        nome,
+        whatsapp,
+        endereco,
+        plano,
+        valor_plano,
+        data_matricula,
+        data_vencimento,
+        contato_emergencia,
+        status,
+        observacoes,
+        id_cliente
+    )
+
+    return execute_query(query, params)
+
 
 def excluir_cliente(id_cliente):
+    """
+    Exclui um cliente pelo ID.
+    """
 
-    conexao = sqlite3.connect("backend/database/banco.db")
-    cursor = conexao.cursor()
+    query = "DELETE FROM clientes WHERE id = ?"
 
-    cursor.execute("""
-        DELETE FROM clientes
-        WHERE id = ?
-    """, (id_cliente,))
-
-    conexao.commit()
-    conexao.close()
-    
-def atualizar_cliente(id_cliente, nome, whatsapp, endereco, observacoes):
-
-    conexao = sqlite3.connect("backend/database/banco.db")
-    cursor = conexao.cursor()
-
-    cursor.execute("""
-        UPDATE clientes
-        SET nome = ?, whatsapp = ?, endereco = ?, observacoes = ?
-        WHERE id = ?
-    """, (nome, whatsapp, endereco, observacoes, id_cliente))
-
-    conexao.commit()
-    conexao.close()
+    return execute_query(query, (id_cliente,))

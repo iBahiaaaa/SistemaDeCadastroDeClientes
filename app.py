@@ -1,4 +1,3 @@
-import sqlite3
 from flask import Flask, render_template, request, redirect
 from backend.controllers.cliente_controller import (
     cadastrar_cliente,
@@ -22,6 +21,18 @@ def inicio():
         clientes=clientes
     )
 
+@app.template_filter('formatar_data')
+def formatar_data(data_str):
+    if not data_str or "-" not in data_str:
+        return data_str
+    try:
+        partes = data_str.split("-")
+        if len(partes) == 3:
+            return f"{partes[2]}/{partes[1]}/{partes[0]}"
+    except:
+        return data_str
+    return data_str
+
 @app.route("/cadastrar", methods=["POST"])
 def cadastrar():
 
@@ -33,4 +44,4 @@ def excluir(id_cliente):
     return deletar_cliente(id_cliente)
     
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5001, debug=True)
+    app.run(host="25.0.103.60", port=5001, debug=True)
