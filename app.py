@@ -40,4 +40,4 @@ def registrar_pagamento_route(id_cliente):
 
 
 if __name__ == "__main__":
-    app.run(host="25.0.103.60", port=5001, debug=True)
+    app.run(debug=True)
