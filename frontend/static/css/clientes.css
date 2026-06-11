@@ -102,17 +102,17 @@ main {
 #divTituloListaClientes {
     position: relative;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     gap: 16px;
 }
 
 #pesquisaEBotao {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     gap: 16px;
-    flex: 1;
+    width: 100%;
 }
 
 .campoPesquisa {
