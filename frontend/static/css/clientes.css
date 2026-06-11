@@ -112,11 +112,12 @@ main {
     justify-content: flex-end;
     align-items: center;
     gap: 16px;
+    flex: 1;
 }
 
 .campoPesquisa {
     position: relative;
-    width: 100%;
+    width: 300px;
 }
 
 .campoPesquisa img {
@@ -132,6 +133,8 @@ main {
 .campoPesquisa input {
     width: 100%;
     padding-left: 40px;
+    padding-right: 8px;
+    box-sizing: border-box;
 }
 
 #pesquisaClientes {
@@ -141,8 +144,6 @@ main {
     background-color: var(--cor0);
     color: white;
     border: 1px solid white;
-    width: 300px;
-    padding-left: 40px;
 }
 
 #pesquisaClientes::placeholder {
