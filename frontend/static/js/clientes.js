@@ -83,6 +83,7 @@ botaoCadastrar.addEventListener("click", function() {
     titulo.innerText = "Cadastrar Cliente";
     btnSalvar.innerText = "Salvar";
     btnExcluirModal.style.display = "none";
+    btnConfirmarPagamento.style.display = "none";
 
     abrirModal();
 });
@@ -186,6 +187,7 @@ function renderizarTabelaClientes(clientes) {
 
             // Mostrar botão excluir e configurar ação
             btnExcluirModal.style.display = "block";
+            btnConfirmarPagamento.style.display = "flex";
             btnExcluirModal.onclick = function() {
                 if (confirm('Tem certeza que deseja excluir este cliente?')) {
                     formExcluirOculto.action = `/excluir/${tr.dataset.id}`;

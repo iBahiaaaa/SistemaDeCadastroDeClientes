@@ -448,7 +448,7 @@ td#nomeCliente {
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
-    display: flex;
+    display: none;
     align-items: center;
     gap: 8px;
 }
