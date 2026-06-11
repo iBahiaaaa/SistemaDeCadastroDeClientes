@@ -114,6 +114,26 @@ main {
     gap: 16px;
 }
 
+.campoPesquisa {
+    position: relative;
+    width: 100%;
+}
+
+.campoPesquisa img {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+}
+
+.campoPesquisa input {
+    width: 100%;
+    padding-left: 40px;
+}
+
 #pesquisaClientes {
     border-radius: 8px;
     font-size: 1em;
@@ -122,6 +142,7 @@ main {
     color: white;
     border: 1px solid white;
     width: 300px;
+    padding-left: 40px;
 }
 
 #pesquisaClientes::placeholder {
@@ -371,7 +392,6 @@ td#nomeCliente {
 #modalEmergencia,
 #modalPlano,
 #modalValorPlano,
-#modalPeriodoPlano,
 #modalStatus,
 #modalMatricula,
 #modalVencimento,
@@ -707,7 +727,6 @@ footer {
     #modalEmergencia,
     #modalPlano,
     #modalValorPlano,
-    #modalPeriodoPlano,
     #modalStatus,
     #modalMatricula,
     #modalVencimento,

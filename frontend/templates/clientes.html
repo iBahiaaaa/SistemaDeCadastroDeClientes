@@ -36,17 +36,21 @@
         </section>
         <section id="conteudoGeral">
             <section id="cadastroClientes">
-        <div id="divTituloListaClientes">
-            <h2 id="tituloListaClientes">Clientes Cadastrados</h2>
-            <div id="pesquisaEBotao">
-                <input type="text" id="pesquisaClientes" placeholder="Pesquise por nome, whatsapp, endereço, plano, status...">
-                <button title="Cadastrar novo cliente" id="botaoCadastrar" type="submit">
-                    <img src="../static/imagens/person_add.svg" alt="">
-                    <span>Cadastrar cliente</span>
-                </button>
-            </div>
-        </div>
-    </section>
+                <div id="divTituloListaClientes">
+                    <h2 id="tituloListaClientes">Clientes Cadastrados</h2>
+                    <div id="pesquisaEBotao">
+                        <div class="campoPesquisa">
+                            <img src="{{ url_for('static', filename='imagens/pesquisar.svg') }}" alt="Pesquisar">
+
+                            <input type="text" id="pesquisaClientes" placeholder="Pesquisar aluno...">
+                        </div>
+                        <button title="Cadastrar novo cliente" id="botaoCadastrar" type="submit">
+                            <img src="../static/imagens/person_add.svg" alt="">
+                            <span>Cadastrar cliente</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
             <div id="conteudoTabelaListaClientes">
                 <table id="tabelaListaClientes">
                     <thead id="cabecaTabelaClientes">
@@ -61,7 +65,7 @@
                         </tr>
                     </thead>
                     <tbody id="bodyTabelaListaClientes">
-            </tbody>
+                    </tbody>
                 </table>
             </div>
         </section>
@@ -81,17 +85,14 @@
                     <input type="text" id="modalEndereco" name="endereco" placeholder="Endereço">
                     <input type="text" id="modalEmergencia" name="contato_emergencia"
                         placeholder="Contato de Emergência">
-                    <span id="linkWppEmergencia" style="display: none;"><a
-                            href="#"
-                            target="_blank" class="whatsapp-link" onclick="event.stopPropagation();"
-                            title="Conversar no WhatsApp">
+                    <span id="linkWppEmergencia" style="display: none;"><a href="#" target="_blank"
+                            class="whatsapp-link" onclick="event.stopPropagation();" title="Conversar no WhatsApp">
                             <i class="fa-brands fa-whatsapp"></i>
                         </a></span>
                 </div>
                 <div class="modal-row">
-                    <input type="text" id="modalPlano" name="plano" placeholder="Plano (ex: Mensal)">
                     <input type="text" id="modalValorPlano" name="valor_plano" placeholder="Valor do Plano">
-                    <select id="modalPeriodoPlano" name="periodo_plano">
+                    <select id="modalPlano" name="plano">
                         <option value="mensal">Mensal</option>
                         <option value="trimestral">Trimestral</option>
                         <option value="semestral">Semestral</option>
@@ -117,7 +118,8 @@
                             <label for="modalVencimento">Data Vencimento</label>
                             <input type="date" id="modalVencimento" name="data_vencimento">
                         </div>
-                        <button type="button" id="btnConfirmarPagamento" title="Confirmar Pagamento" style="margin-bottom: 0; background-color: #2bff00; color: #171b20; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer;">
+                        <button type="button" id="btnConfirmarPagamento" title="Confirmar Pagamento"
+                            style="margin-bottom: 0; background-color: #2bff00; color: #171b20; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer;">
                             <i class="fa-solid fa-check"></i>
                         </button>
                     </div>
@@ -139,18 +141,22 @@
     <form id="formPagamentoOculto" method="POST" style="display: none;">
     </form>
     <section id="overlayModal">
-        </section>
-        <script src="{{ url_for('static', filename='js/clientes.js') }}"></script>
-        <script>
-            // Inicializa a tabela com os clientes do servidor ao carregar a página
-            document.addEventListener('DOMContentLoaded', function() {
-                let clientesIniciais = {{ clientes | tojson | safe }};
-                // Garante que seja sempre um array
-                if (!Array.isArray(clientesIniciais)) {
-                    clientesIniciais = [];
-                }
-                renderizarTabelaClientes(clientesIniciais);
-            });
-        </script>
-    </body>
+    </section>
+    <script src="{{ url_for('static', filename='js/clientes.js') }}"></script>
+    <script id="clientes-data" type="application/json">
+    {{ clientes | tojson | safe }}
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            let clientesIniciais = JSON.parse(
+                document.getElementById('clientes-data').textContent
+            );
+
+            renderizarTabelaClientes(clientesIniciais);
+        });
+    </script>
+</body>
+
 </html>

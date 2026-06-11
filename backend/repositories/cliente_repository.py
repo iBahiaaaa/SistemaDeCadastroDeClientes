@@ -101,7 +101,6 @@ def salvar_cliente(
     endereco,
     plano,
     valor_plano,
-    periodo_plano,
     data_matricula,
     data_vencimento,
     contato_emergencia,
@@ -119,7 +118,6 @@ def salvar_cliente(
             endereco,
             plano,
             valor_plano,
-            periodo_plano,
             data_matricula,
             data_vencimento,
             ultimo_pagamento,
@@ -127,7 +125,7 @@ def salvar_cliente(
             status,
             observacoes
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)
     """
 
     params = (
@@ -136,7 +134,6 @@ def salvar_cliente(
         endereco,
         plano,
         valor_plano,
-        periodo_plano,
         data_matricula,
         data_vencimento,
         contato_emergencia,
@@ -160,7 +157,6 @@ def buscar_clientes():
             endereco,
             plano,
             valor_plano,
-            periodo_plano,
             data_matricula,
             data_vencimento,
             ultimo_pagamento,
@@ -198,7 +194,6 @@ def buscar_cliente_por_id(id_cliente):
             endereco,
             plano,
             valor_plano,
-            periodo_plano,
             data_matricula,
             data_vencimento,
             ultimo_pagamento,
@@ -223,7 +218,6 @@ def atualizar_cliente(
     endereco,
     plano,
     valor_plano,
-    periodo_plano,
     data_matricula,
     data_vencimento,
     contato_emergencia,
@@ -242,7 +236,6 @@ def atualizar_cliente(
             endereco = ?,
             plano = ?,
             valor_plano = ?,
-            periodo_plano = ?,
             data_matricula = ?,
             data_vencimento = ?,
             contato_emergencia = ?,
@@ -257,7 +250,6 @@ def atualizar_cliente(
         endereco,
         plano,
         valor_plano,
-        periodo_plano,
         data_matricula,
         data_vencimento,
         contato_emergencia,
@@ -292,7 +284,6 @@ def pesquisar_clientes(termo_pesquisa):
             endereco,
             plano,
             valor_plano,
-            periodo_plano,
             data_matricula,
             data_vencimento,
             ultimo_pagamento,
@@ -305,7 +296,6 @@ def pesquisar_clientes(termo_pesquisa):
             endereco LIKE ? OR
             plano LIKE ? OR
             valor_plano LIKE ? OR
-            periodo_plano LIKE ? OR
             data_matricula LIKE ? OR
             data_vencimento LIKE ? OR
             contato_emergencia LIKE ? OR
@@ -314,7 +304,7 @@ def pesquisar_clientes(termo_pesquisa):
     """
 
     termo = f"%{termo_pesquisa}%"
-    params = (termo, termo, termo, termo, termo, termo, termo, termo, termo, termo)
+    params = (termo, termo, termo, termo, termo, termo, termo, termo, termo)
 
     clientes = execute_query(query, params, is_select=True)
 
@@ -343,11 +333,11 @@ def registrar_pagamento(id_cliente):
         
     cliente_dict = dict(cliente)
     data_vencimento_atual = cliente_dict.get('data_vencimento')
-    periodo_plano = cliente_dict.get('periodo_plano', 'mensal')
+    plano = cliente_dict.get('plano', 'mensal')
     
     if data_vencimento_atual:
         # Calcula a nova data de vencimento
-        nova_data_vencimento = calcular_data_vencimento(data_vencimento_atual, periodo_plano)
+        nova_data_vencimento = calcular_data_vencimento(data_vencimento_atual, plano)
         
         if nova_data_vencimento:
             query = """

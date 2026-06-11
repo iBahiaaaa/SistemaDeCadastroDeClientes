@@ -19,7 +19,6 @@ def cadastrar_cliente():
     endereco = request.form.get("endereco", "").strip()
     plano = request.form.get("plano")
     valor_plano = request.form.get("valor_plano")
-    periodo_plano = request.form.get("periodo_plano", "mensal")
     data_matricula = request.form.get("data_matricula")
     data_vencimento = request.form.get("data_vencimento")
     contato_emergencia = request.form.get("contato_emergencia")
@@ -37,7 +36,6 @@ def cadastrar_cliente():
             endereco,
             plano,
             valor_plano,
-            periodo_plano,
             data_matricula,
             data_vencimento,
             contato_emergencia,
@@ -51,7 +49,6 @@ def cadastrar_cliente():
             endereco,
             plano,
             valor_plano,
-            periodo_plano,
             data_matricula,
             data_vencimento,
             contato_emergencia,

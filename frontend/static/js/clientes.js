@@ -16,7 +16,6 @@ const inputEndereco = document.getElementById("modalEndereco");
 const inputEmergencia = document.getElementById("modalEmergencia");
 const inputPlano = document.getElementById("modalPlano");
 const inputValorPlano = document.getElementById("modalValorPlano");
-const inputPeriodoPlano = document.getElementById("modalPeriodoPlano");
 const inputStatus = document.getElementById("modalStatus");
 const inputMatricula = document.getElementById("modalMatricula");
 const inputVencimento = document.getElementById("modalVencimento");
@@ -70,9 +69,8 @@ botaoCadastrar.addEventListener("click", function() {
     inputWhatsapp.value = "";
     inputEndereco.value = "";
     inputEmergencia.value = "";
-    inputPlano.value = "";
+    inputPlano.value = "mensal";
     inputValorPlano.value = "";
-    inputPeriodoPlano.value = "mensal";
     inputStatus.value = "Pago"; // Status padrão
     inputMatricula.value = dataMatricula; // Preenche com data de hoje
     inputVencimento.value = dataVencimento; // Preenche com data daqui a 1 mês
@@ -134,7 +132,6 @@ function renderizarTabelaClientes(clientes) {
         tr.dataset.endereco = cliente.endereco || "";
         tr.dataset.plano = cliente.plano || "";
         tr.dataset.valor = cliente.valor_plano || "";
-        tr.dataset.periodo_plano = cliente.periodo_plano || "mensal";
         tr.dataset.matricula = cliente.data_matricula || "";
         tr.dataset.vencimento = cliente.data_vencimento || "";
         tr.dataset.ultimo_pagamento = cliente.ultimo_pagamento || "";
@@ -160,10 +157,10 @@ function renderizarTabelaClientes(clientes) {
             <td data-label="Nome">${cliente.nome || ""}</td>
             <td data-label="Whatsapp">${whatsappHtml}</td>
             <td data-label="Matricula">${formatarDataBr(cliente.data_matricula)}</td>
-            <td data-label="Plano">${cliente.plano || ""}</td>
+            <td data-label="Plano">${cliente.plano ? cliente.plano.charAt(0).toUpperCase() + cliente.plano.slice(1) : ""}</td>
             <td data-label="Vencimento">${formatarDataBr(cliente.data_vencimento)}</td>
             <td data-label="Status" class="${cliente.status || ''}">${cliente.status || ""}</td>
-            <td data-label="Observações">${cliente.observacoes || ""}</td>
+            <td data-label="Observacoes">${cliente.observacoes || ""}</td>
         `;
 
         // Adiciona evento de clique para editar
@@ -175,7 +172,6 @@ function renderizarTabelaClientes(clientes) {
             inputEmergencia.value = this.dataset.emergencia;
             inputPlano.value = this.dataset.plano;
             inputValorPlano.value = this.dataset.valor;
-            inputPeriodoPlano.value = this.dataset.periodo_plano;
             inputStatus.value = this.dataset.status;
             inputMatricula.value = this.dataset.matricula;
             inputVencimento.value = this.dataset.vencimento;
