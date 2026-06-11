@@ -1,4 +1,98 @@
 from backend.database.connection import execute_query
+from datetime import datetime, timedelta
+
+
+def calcular_status_automatico(data_vencimento):
+    """
+    Calcula o status do cliente automaticamente com base na data de vencimento:
+    - Pago: se data de vencimento for >= hoje
+    - Pendente: se data de vencimento for ontem ou até 7 dias atrás
+    - Inadimplente: se data de vencimento for mais de 7 dias atrás
+    """
+    hoje = datetime.now().date()
+    
+    if not data_vencimento:
+        return "Pendente"
+        
+    try:
+        data_venc = datetime.strptime(data_vencimento, "%Y-%m-%d").date()
+        diferenca_dias = (hoje - data_venc).days
+        
+        if diferenca_dias <= 0:
+            return "Pago"
+        elif 1 <= diferenca_dias <= 7:
+            return "Pendente"
+        else:
+            return "Inadimplente"
+            
+    except ValueError:
+        return "Pendente"
+
+
+def calcular_data_vencimento(data_referencia, periodo_plano):
+    """
+    Calcula a próxima data de vencimento com base na data de referência e período do plano
+    Períodos suportados: mensal, trimestral, semestral, anual
+    """
+    if not data_referencia:
+        return None
+        
+    try:
+        data = datetime.strptime(data_referencia, "%Y-%m-%d")
+        
+        if periodo_plano == "trimestral":
+            # Adiciona 3 meses
+            mes = data.month + 2
+            ano = data.year
+            dia = data.day
+            
+            if mes > 12:
+                mes -= 12
+                ano += 1
+                
+            nova_data = datetime(ano, mes, dia)
+            return nova_data.strftime("%Y-%m-%d")
+            
+        elif periodo_plano == "semestral":
+            # Adiciona 6 meses
+            mes = data.month + 5
+            ano = data.year
+            dia = data.day
+            
+            if mes > 12:
+                mes -= 12
+                ano += 1
+                
+            nova_data = datetime(ano, mes, dia)
+            return nova_data.strftime("%Y-%m-%d")
+            
+        elif periodo_plano == "anual":
+            # Adiciona 1 ano
+            nova_data = datetime(data.year + 1, data.month, data.day)
+            return nova_data.strftime("%Y-%m-%d")
+            
+        else:  # Padrão: mensal
+            # Adiciona 1 mês
+            mes = data.month + 1
+            ano = data.year
+            dia = data.day
+            
+            if mes > 12:
+                mes = 1
+                ano += 1
+                
+            # Trata casos como 31 de janeiro para fevereiro (evita erro)
+            while True:
+                try:
+                    nova_data = datetime(ano, mes, dia)
+                    break
+                except ValueError:
+                    dia -= 1
+                    
+            return nova_data.strftime("%Y-%m-%d")
+            
+    except ValueError:
+        return None
 
 
 def salvar_cliente(
@@ -7,6 +101,7 @@ def salvar_cliente(
     endereco,
     plano,
     valor_plano,
+    periodo_plano,
     data_matricula,
     data_vencimento,
     contato_emergencia,
@@ -24,13 +119,15 @@ def salvar_cliente(
             endereco,
             plano,
             valor_plano,
+            periodo_plano,
             data_matricula,
             data_vencimento,
+            ultimo_pagamento,
             contato_emergencia,
             status,
             observacoes
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)
     """
 
     params = (
@@ -39,6 +136,7 @@ def salvar_cliente(
         endereco,
         plano,
         valor_plano,
+        periodo_plano,
         data_matricula,
         data_vencimento,
         contato_emergencia,
@@ -51,7 +149,7 @@ def salvar_cliente(
 
 def buscar_clientes():
     """
-    Retorna todos os clientes cadastrados.
+    Retorna todos os clientes cadastrados com status calculado automaticamente.
     """
 
     query = """
@@ -62,21 +160,34 @@ def buscar_clientes():
             endereco,
             plano,
             valor_plano,
+            periodo_plano,
             data_matricula,
             data_vencimento,
+            ultimo_pagamento,
             contato_emergencia,
-            status,
             observacoes
         FROM clientes
         ORDER BY nome
     """
 
-    return execute_query(query, is_select=True)
+    clientes = execute_query(query, is_select=True)
+
+    if not clientes or clientes is None:
+        return []
+
+    # Calcula status automaticamente para cada cliente
+    clientes_com_status = []
+    for cliente in clientes:
+        cliente_dict = dict(cliente)  # Converte para dicionário
+        cliente_dict['status'] = calcular_status_automatico(cliente_dict['data_vencimento'])
+        clientes_com_status.append(cliente_dict)
+
+    return clientes_com_status
 
 
 def buscar_cliente_por_id(id_cliente):
     """
-    Busca um cliente específico pelo ID.
+    Busca um cliente pelo seu ID.
     """
 
     query = """
@@ -87,10 +198,11 @@ def buscar_cliente_por_id(id_cliente):
             endereco,
             plano,
             valor_plano,
+            periodo_plano,
             data_matricula,
             data_vencimento,
+            ultimo_pagamento,
             contato_emergencia,
-            status,
             observacoes
         FROM clientes
         WHERE id = ?
@@ -111,6 +223,7 @@ def atualizar_cliente(
     endereco,
     plano,
     valor_plano,
+    periodo_plano,
     data_matricula,
     data_vencimento,
     contato_emergencia,
@@ -129,6 +242,7 @@ def atualizar_cliente(
             endereco = ?,
             plano = ?,
             valor_plano = ?,
+            periodo_plano = ?,
             data_matricula = ?,
             data_vencimento = ?,
             contato_emergencia = ?,
@@ -143,6 +257,7 @@ def atualizar_cliente(
         endereco,
         plano,
         valor_plano,
+        periodo_plano,
         data_matricula,
         data_vencimento,
         contato_emergencia,
@@ -162,3 +277,89 @@ def excluir_cliente(id_cliente):
     query = "DELETE FROM clientes WHERE id = ?"
 
     return execute_query(query, (id_cliente,))
+
+
+def pesquisar_clientes(termo_pesquisa):
+    """
+    Pesquisa clientes por todos os campos.
+    """
+
+    query = """
+        SELECT
+            id,
+            nome,
+            whatsapp,
+            endereco,
+            plano,
+            valor_plano,
+            periodo_plano,
+            data_matricula,
+            data_vencimento,
+            ultimo_pagamento,
+            contato_emergencia,
+            observacoes
+        FROM clientes
+        WHERE 
+            nome LIKE ? OR
+            whatsapp LIKE ? OR
+            endereco LIKE ? OR
+            plano LIKE ? OR
+            valor_plano LIKE ? OR
+            periodo_plano LIKE ? OR
+            data_matricula LIKE ? OR
+            data_vencimento LIKE ? OR
+            contato_emergencia LIKE ? OR
+            observacoes LIKE ?
+        ORDER BY nome
+    """
+
+    termo = f"%{termo_pesquisa}%"
+    params = (termo, termo, termo, termo, termo, termo, termo, termo, termo, termo)
+
+    clientes = execute_query(query, params, is_select=True)
+
+    if not clientes or clientes is None:
+        return []
+
+    # Calcula status automaticamente para cada cliente
+    clientes_com_status = []
+    for cliente in clientes:
+        cliente_dict = dict(cliente)  # Converte para dicionário
+        cliente_dict['status'] = calcular_status_automatico(cliente_dict['data_vencimento'])
+        clientes_com_status.append(cliente_dict)
+
+    return clientes_com_status
+
+
+def registrar_pagamento(id_cliente):
+    """
+    Registra um pagamento:
+    1. Salva a data de vencimento atual em ultimo_pagamento
+    2. Calcula a nova data de vencimento usando ultimo_pagamento como base
+    """
+    cliente = buscar_cliente_por_id(id_cliente)
+    if not cliente:
+        return False
+        
+    cliente_dict = dict(cliente)
+    data_vencimento_atual = cliente_dict.get('data_vencimento')
+    periodo_plano = cliente_dict.get('periodo_plano', 'mensal')
+    
+    if data_vencimento_atual:
+        # Calcula a nova data de vencimento
+        nova_data_vencimento = calcular_data_vencimento(data_vencimento_atual, periodo_plano)
+        
+        if nova_data_vencimento:
+            query = """
+                UPDATE clientes
+                SET
+                    ultimo_pagamento = ?,
+                    data_vencimento = ?,
+                    status = 'Pago'
+                WHERE id = ?
+            """
+            
+            params = (data_vencimento_atual, nova_data_vencimento, id_cliente)
+            return execute_query(query, params)
+    
+    return False

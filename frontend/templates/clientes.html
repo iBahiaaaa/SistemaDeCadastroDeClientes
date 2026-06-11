@@ -36,14 +36,17 @@
         </section>
         <section id="conteudoGeral">
             <section id="cadastroClientes">
-                <div id="divTituloListaClientes">
-                    <h2 id="tituloListaClientes">Clientes Cadastrados</h2>
-                    <button title="Cadastrar novo cliente" id="botaoCadastrar" type="submit">
-                        <img src="../static/imagens/person_add.svg" alt="">
-                        <span>Cadastrar cliente</span>
-                    </button>
-                </div>
-            </section>
+        <div id="divTituloListaClientes">
+            <h2 id="tituloListaClientes">Clientes Cadastrados</h2>
+            <div id="pesquisaEBotao">
+                <input type="text" id="pesquisaClientes" placeholder="Pesquise por nome, whatsapp, endereço, plano, status...">
+                <button title="Cadastrar novo cliente" id="botaoCadastrar" type="submit">
+                    <img src="../static/imagens/person_add.svg" alt="">
+                    <span>Cadastrar cliente</span>
+                </button>
+            </div>
+        </div>
+    </section>
             <div id="conteudoTabelaListaClientes">
                 <table id="tabelaListaClientes">
                     <thead id="cabecaTabelaClientes">
@@ -58,40 +61,7 @@
                         </tr>
                     </thead>
                     <tbody id="bodyTabelaListaClientes">
-                        {% for cliente in clientes %}
-                        <tr class="clienteIndividual" data-id="{{ cliente['id'] }}" data-nome="{{ cliente['nome'] }}"
-                            data-whatsapp="{{ cliente['whatsapp'] }}" data-endereco="{{ cliente['endereco'] }}"
-                            data-plano="{{ cliente['plano'] }}" data-valor="{{ cliente['valor_plano'] }}"
-                            data-matricula="{{ cliente['data_matricula'] }}"
-                            data-vencimento="{{ cliente['data_vencimento'] }}"
-                            data-emergencia="{{ cliente['contato_emergencia'] }}" data-status="{{ cliente['status'] }}"
-                            data-observacoes="{{ cliente['observacoes'] }}">
-
-                            <td data-label="Nome">{{ cliente['nome'] }}</td>
-                            <td data-label="Whatsapp">
-                                <div class="whatsapp-cell">
-                                    <span>{{ cliente['whatsapp'] }}</span>
-                                    <a href="https://wa.me/55{{ cliente['whatsapp'] | replace('(', '') | replace(')', '') | replace('-', '') | replace(' ', '') }}" 
-                                       target="_blank" 
-                                       class="whatsapp-link" 
-                                       onclick="event.stopPropagation();" 
-                                       title="Conversar no WhatsApp">
-                                        <i class="fa-brands fa-whatsapp"></i>
-                                    </a>
-                                </div>
-                            </td>
-                            <td data-label="Matricula">{{ cliente['data_matricula'] | formatar_data }}</td>
-                            <td data-label="Plano">{{ cliente['plano'] }}</td>
-                            <td data-label="Vencimento">{{ cliente['data_vencimento'] | formatar_data }}</td>
-                            <td data-label="Status" class="{% if cliente['status'] == 'Pago' %}
-                                status-pago{% elif cliente['status'] == 'Pendente' %}
-                                status-pendente{% elif cliente['status'] == 'Inadimplente' %}
-                                status-inadimplente{% endif %}">
-                                {{ cliente['status'] }}</td>
-                            <td data-label="Observações">{{ cliente['observacoes'] }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
+            </tbody>
                 </table>
             </div>
         </section>
@@ -111,10 +81,22 @@
                     <input type="text" id="modalEndereco" name="endereco" placeholder="Endereço">
                     <input type="text" id="modalEmergencia" name="contato_emergencia"
                         placeholder="Contato de Emergência">
+                    <span id="linkWppEmergencia" style="display: none;"><a
+                            href="#"
+                            target="_blank" class="whatsapp-link" onclick="event.stopPropagation();"
+                            title="Conversar no WhatsApp">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a></span>
                 </div>
                 <div class="modal-row">
                     <input type="text" id="modalPlano" name="plano" placeholder="Plano (ex: Mensal)">
                     <input type="text" id="modalValorPlano" name="valor_plano" placeholder="Valor do Plano">
+                    <select id="modalPeriodoPlano" name="periodo_plano">
+                        <option value="mensal">Mensal</option>
+                        <option value="trimestral">Trimestral</option>
+                        <option value="semestral">Semestral</option>
+                        <option value="anual">Anual</option>
+                    </select>
                     <select id="modalStatus" name="status">
                         <option value="Pago">Pago</option>
                         <option value="Pendente">Pendente</option>
@@ -123,12 +105,21 @@
                 </div>
                 <div class="modal-row">
                     <div class="input-group">
-                        <label for="modalMatricula">Data Matrícula</label>
+                        <label for="modalMatricula">Data Matricula</label>
                         <input type="date" id="modalMatricula" name="data_matricula">
                     </div>
                     <div class="input-group">
-                        <label for="modalVencimento">Data Vencimento</label>
-                        <input type="date" id="modalVencimento" name="data_vencimento">
+                        <label for="modalUltimoPagamento">Último Pagamento</label>
+                        <input type="date" id="modalUltimoPagamento" name="ultimo_pagamento" disabled>
+                    </div>
+                    <div class="input-group" style="display: flex; align-items: flex-end; gap: 10px;">
+                        <div style="flex: 1;">
+                            <label for="modalVencimento">Data Vencimento</label>
+                            <input type="date" id="modalVencimento" name="data_vencimento">
+                        </div>
+                        <button type="button" id="btnConfirmarPagamento" title="Confirmar Pagamento" style="margin-bottom: 0; background-color: #2bff00; color: #171b20; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer;">
+                            <i class="fa-solid fa-check"></i>
+                        </button>
                     </div>
                 </div>
                 <textarea id="modalObservacoes" name="observacoes" placeholder="Observações"></textarea>
@@ -145,9 +136,21 @@
     </section>
     <form id="formExcluirOculto" method="POST" style="display: none;">
     </form>
+    <form id="formPagamentoOculto" method="POST" style="display: none;">
+    </form>
     <section id="overlayModal">
-    </section>
-    <script src="{{ url_for('static', filename='js/clientes.js') }}"></script>
-</body>
-
+        </section>
+        <script src="{{ url_for('static', filename='js/clientes.js') }}"></script>
+        <script>
+            // Inicializa a tabela com os clientes do servidor ao carregar a página
+            document.addEventListener('DOMContentLoaded', function() {
+                let clientesIniciais = {{ clientes | tojson | safe }};
+                // Garante que seja sempre um array
+                if (!Array.isArray(clientesIniciais)) {
+                    clientesIniciais = [];
+                }
+                renderizarTabelaClientes(clientesIniciais);
+            });
+        </script>
+    </body>
 </html>

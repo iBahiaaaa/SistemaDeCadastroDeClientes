@@ -1,10 +1,12 @@
-from flask import request, redirect
+from flask import request, redirect, jsonify
 
 from backend.repositories.cliente_repository import (
     salvar_cliente,
     buscar_clientes,
     excluir_cliente,
-    atualizar_cliente
+    atualizar_cliente,
+    pesquisar_clientes,
+    registrar_pagamento
 )
 
 
@@ -17,6 +19,7 @@ def cadastrar_cliente():
     endereco = request.form.get("endereco", "").strip()
     plano = request.form.get("plano")
     valor_plano = request.form.get("valor_plano")
+    periodo_plano = request.form.get("periodo_plano", "mensal")
     data_matricula = request.form.get("data_matricula")
     data_vencimento = request.form.get("data_vencimento")
     contato_emergencia = request.form.get("contato_emergencia")
@@ -34,6 +37,7 @@ def cadastrar_cliente():
             endereco,
             plano,
             valor_plano,
+            periodo_plano,
             data_matricula,
             data_vencimento,
             contato_emergencia,
@@ -47,6 +51,7 @@ def cadastrar_cliente():
             endereco,
             plano,
             valor_plano,
+            periodo_plano,
             data_matricula,
             data_vencimento,
             contato_emergencia,
@@ -57,6 +62,11 @@ def cadastrar_cliente():
     return redirect("/")
 
 
+def registrar_pagamento_controller(id_cliente):
+    sucesso = registrar_pagamento(id_cliente)
+    return redirect("/")
+
+
 def listar_clientes():
     return buscar_clientes() or []
 
@@ -64,3 +74,9 @@ def listar_clientes():
 def deletar_cliente(id_cliente):
     excluir_cliente(id_cliente)
     return redirect("/")
+
+
+def pesquisar_cliente_controller():
+    termo = request.args.get('termo', '')
+    clientes = pesquisar_clientes(termo)
+    return jsonify(clientes)

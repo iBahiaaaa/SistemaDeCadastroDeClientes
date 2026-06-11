@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, redirect
 from backend.controllers.cliente_controller import (
     cadastrar_cliente,
     listar_clientes,
-    deletar_cliente
+    deletar_cliente,
+    pesquisar_cliente_controller,
+    registrar_pagamento_controller
 )
 
 app = Flask(
@@ -13,25 +15,8 @@ app = Flask(
 
 @app.route("/")
 def inicio():
-
     clientes = listar_clientes()
-
-    return render_template(
-        "clientes.html",
-        clientes=clientes
-    )
-
-@app.template_filter('formatar_data')
-def formatar_data(data_str):
-    if not data_str or "-" not in data_str:
-        return data_str
-    try:
-        partes = data_str.split("-")
-        if len(partes) == 3:
-            return f"{partes[2]}/{partes[1]}/{partes[0]}"
-    except:
-        return data_str
-    return data_str
+    return render_template("clientes.html", clientes=clientes)
 
 @app.route("/cadastrar", methods=["POST"])
 def cadastrar():
@@ -43,5 +28,16 @@ def excluir(id_cliente):
 
     return deletar_cliente(id_cliente)
     
+
+@app.route("/pesquisar", methods=["GET"])
+def pesquisar():
+    return pesquisar_cliente_controller()
+
+
+@app.route("/registrar-pagamento/<int:id_cliente>", methods=["POST"])
+def registrar_pagamento_route(id_cliente):
+    return registrar_pagamento_controller(id_cliente)
+
+
 if __name__ == "__main__":
     app.run(host="25.0.103.60", port=5001, debug=True)

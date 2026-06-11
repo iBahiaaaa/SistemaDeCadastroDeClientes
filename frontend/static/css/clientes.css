@@ -104,6 +104,28 @@ main {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    gap: 16px;
+}
+
+#pesquisaEBotao {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+}
+
+#pesquisaClientes {
+    border-radius: 8px;
+    font-size: 1em;
+    padding: 8px 16px;
+    background-color: var(--cor0);
+    color: white;
+    border: 1px solid white;
+    width: 300px;
+}
+
+#pesquisaClientes::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 #tituloListaClientes {
@@ -182,12 +204,34 @@ td#nomeCliente {
     width: 250px;
 }
 
-#colNome { width: 400px; }
-#colWhatsapp { width: 180px; text-align: center; }
-#colMatricula { width: 150px; text-align: center; }
-#colPlano { width: 150px; text-align: center; }
-#colVencimento { width: 110px; text-align: center; }
-#colStatus { width: 110px; text-align: center; }
+#colNome {
+    width: 400px;
+}
+
+#colWhatsapp {
+    width: 180px;
+    text-align: center;
+}
+
+#colMatricula {
+    width: 150px;
+    text-align: center;
+}
+
+#colPlano {
+    width: 150px;
+    text-align: center;
+}
+
+#colVencimento {
+    width: 110px;
+    text-align: center;
+}
+
+#colStatus {
+    width: 130px;
+    text-align: center;
+}
 
 .whatsapp-cell {
     display: flex;
@@ -210,7 +254,8 @@ td#nomeCliente {
 }
 
 /* Botões de Ação na Tabela (Removidos em favor do clique na linha) */
-#tabelaAcoes, #btnAcoes {
+#tabelaAcoes,
+#btnAcoes {
     display: none !important;
 }
 
@@ -320,8 +365,18 @@ td#nomeCliente {
     font-size: 1.8em;
 }
 
-#modalNome, #modalWhatsapp, #modalEndereco, #modalEmergencia, #modalPlano, 
-#modalValorPlano, #modalStatus, #modalMatricula, #modalVencimento, #modalObservacoes {
+#modalNome,
+#modalWhatsapp,
+#modalEndereco,
+#modalEmergencia,
+#modalPlano,
+#modalValorPlano,
+#modalPeriodoPlano,
+#modalStatus,
+#modalMatricula,
+#modalVencimento,
+#modalUltimoPagamento,
+#modalObservacoes {
     border-radius: 6px;
     font-weight: 550;
     font-size: 1em;
@@ -348,6 +403,12 @@ td#nomeCliente {
 #botoesDireitaModal {
     display: flex;
     gap: 10px;
+}
+
+#linkWppEmergencia {
+    position: absolute;
+    right: 28px;
+    padding-top: 10px;
 }
 
 .btnExcluir {
@@ -412,6 +473,29 @@ td#nomeCliente {
     background-color: #800000;
     color: #ff0000 !important;
     font-weight: bold;
+}
+
+.btn-pagamento {
+    background-color: #2bff00;
+    color: #171b20;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-pagamento:hover {
+    background-color: #128C7E;
+    transform: scale(1.1);
+}
+
+.btn-pagamento i {
+    font-size: 1em;
 }
 
 /* Footer */
@@ -617,8 +701,18 @@ footer {
         gap: 10px;
     }
 
-    #modalNome, #modalWhatsapp, #modalEndereco, #modalEmergencia, #modalPlano, 
-    #modalValorPlano, #modalStatus, #modalMatricula, #modalVencimento, #modalObservacoes {
+    #modalNome,
+    #modalWhatsapp,
+    #modalEndereco,
+    #modalEmergencia,
+    #modalPlano,
+    #modalValorPlano,
+    #modalPeriodoPlano,
+    #modalStatus,
+    #modalMatricula,
+    #modalVencimento,
+    #modalUltimoPagamento,
+    #modalObservacoes {
         width: 100% !important;
         margin: 0 !important;
     }
@@ -634,7 +728,16 @@ footer {
         gap: 10px;
     }
 
-    #btnSalvar, #btnCancelar, .btnExcluir {
+    #linkWppEmergencia {
+        position: absolute;
+        right: 10px;
+        padding-top: 10px;
+        top: 238px;
+    }
+
+    #btnSalvar,
+    #btnCancelar,
+    .btnExcluir {
         width: 100% !important;
         margin: 0 !important;
     }

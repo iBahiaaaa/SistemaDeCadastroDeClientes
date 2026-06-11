@@ -13,8 +13,10 @@ def inicializar_banco():
         endereco TEXT,
         plano TEXT,
         valor_plano REAL,
+        periodo_plano TEXT DEFAULT 'mensal',
         data_matricula TEXT,
         data_vencimento TEXT,
+        ultimo_pagamento TEXT,
         contato_emergencia TEXT,
         status TEXT,
         observacoes TEXT
