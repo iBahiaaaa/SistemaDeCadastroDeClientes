@@ -144,6 +144,7 @@ main {
     background-color: var(--cor0);
     color: white;
     border: 1px solid white;
+    padding-left: 40px;
 }
 
 #pesquisaClientes::placeholder {
@@ -287,26 +288,20 @@ td#nomeCliente {
     align-items: center;
     gap: 8px;
     justify-content: flex-start;
-    color: white;
+    color: #171b20;
     border: 2px solid #2bff00;
     border-radius: 8px;
-    padding: 5px;
-    background: transparent;
+    padding: 8px 15px;
+    background: #2bff00;
     font-size: 1em;
-    width: 35px;
-    white-space: nowrap;
-    overflow: hidden;
-    transition: width 0.3s ease;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 #botaoCadastrar:hover {
-    background-color: #2bff002d;
-    width: 180px;
-}
-
-#botaoCadastrar:active {
-    transform: translateY(2px);
+    background-color: #128c7e;
+    border-color: #128c7e;
+    transform: scale(1.05);
 }
 
 /* Inputs e Formulários */
@@ -430,48 +425,74 @@ td#nomeCliente {
     position: absolute;
     right: 28px;
     padding-top: 10px;
+    display: none;
 }
 
-.btnExcluir {
-    color: white;
-    border: 2px solid #ff0000;
-    border-radius: 8px;
-    padding: 8px 15px;
-    background: transparent;
-    font-size: 1em;
-    cursor: pointer;
+#btnExcluirModal {
+    display: none;
 }
 
-.btnExcluir:hover {
-    background-color: #ff00002d;
+#formExcluirOculto,
+#formPagamentoOculto {
+    display: none;
 }
 
-#btnSalvar {
-    color: white;
+
+
+#btnConfirmarPagamento {
+    background-color: #2bff00;
+    color: #171b20;
     border: 2px solid #2bff00;
     border-radius: 8px;
     padding: 8px 15px;
-    background: transparent;
     font-size: 1em;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-#btnSalvar:hover {
-    background-color: #2bff002d;
+#btnConfirmarPagamento:hover {
+    background-color: #128c7e;
+    border-color: #128c7e;
+    transform: scale(1.05);
 }
 
+.btnExcluir,
 #btnCancelar {
+    background-color: #ff0000;
     color: white;
     border: 2px solid #ff0000;
     border-radius: 8px;
     padding: 8px 15px;
-    background: transparent;
     font-size: 1em;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
+.btnExcluir:hover,
 #btnCancelar:hover {
-    background-color: #ff00002d;
+    background-color: #cc0000;
+    border-color: #cc0000;
+    transform: scale(1.05);
+}
+
+#btnSalvar {
+    background-color: #2bff00;
+    color: #171b20;
+    border: 2px solid #2bff00;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#btnSalvar:hover {
+    background-color: #128c7e;
+    border-color: #128c7e;
+    transform: scale(1.05);
 }
 
 /* Cores de Status */
