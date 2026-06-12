@@ -7,10 +7,35 @@
     --cor2: #20252c;
     --cor3: #171b20;
     --cor4: #ff6b00;
+    --texto: #ffffff;
+    --textoSuave: rgba(255, 255, 255, 0.6);
+    --borda: rgba(255, 255, 255, 0.9);
+    --bordaSuave: rgba(255, 255, 255, 0.05);
+    --placeholder: rgba(255, 255, 255, 0.6);
+    --overlay: rgba(0, 0, 0, 0.80);
+    --sombraTexto: 0 0 3px rgba(0, 0, 0, 0.8);
+    --iconeFiltro: none;
+}
+
+:root[data-theme="light"] {
+    --cor0: #f5f7fa;
+    --cor1: #eef1f4;
+    --cor2: #ffffff;
+    --cor3: #e7ebf0;
+    --cor4: #ff6b00;
+    --texto: #14181f;
+    --textoSuave: rgba(20, 24, 31, 0.65);
+    --borda: rgba(20, 24, 31, 0.25);
+    --bordaSuave: rgba(20, 24, 31, 0.08);
+    --placeholder: rgba(20, 24, 31, 0.55);
+    --overlay: rgba(0, 0, 0, 0.45);
+    --sombraTexto: 0 0 3px rgba(0, 0, 0, 0.2);
+    --iconeFiltro: invert(1);
 }
 
 body {
     background-color: var(--cor0);
+    color: var(--texto);
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -22,7 +47,7 @@ main {
 }
 
 ::placeholder {
-    color: rgba(255, 255, 255, 0.60);
+    color: var(--placeholder);
 }
 
 /* Cabeçalho */
@@ -32,6 +57,29 @@ main {
     background-color: var(--cor3);
     display: flex;
     top: 0%;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 20px;
+}
+
+#btnTema {
+    background-color: var(--cor2);
+    color: var(--texto);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+#btnTema:hover {
+    background-color: var(--cor1);
+    border-color: var(--borda);
+    transform: scale(1.03);
 }
 
 /* Barra Lateral */
@@ -46,12 +94,12 @@ main {
 
 #barraLateral h1 {
     font-size: 1.7em;
-    color: white;
+    color: var(--texto);
     display: flex;
     align-items: center;
     white-space: nowrap;
     overflow: hidden;
-    text-shadow: 0 0 3px black;
+    text-shadow: var(--sombraTexto);
     height: 50px;
     margin: 0 0 10px 0;
 }
@@ -63,6 +111,7 @@ main {
 #barraLateral img {
     margin-left: 15px;
     margin-right: 30px;
+    filter: var(--iconeFiltro);
 }
 
 #barraLateral:hover {
@@ -128,6 +177,7 @@ main {
     width: 18px;
     height: 18px;
     pointer-events: none;
+    filter: var(--iconeFiltro);
 }
 
 .campoPesquisa input {
@@ -142,17 +192,17 @@ main {
     font-size: 1em;
     padding: 8px 16px;
     background-color: var(--cor0);
-    color: white;
-    border: 1px solid white;
+    color: var(--texto);
+    border: 1px solid var(--borda);
     padding-left: 40px;
 }
 
 #pesquisaClientes::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--placeholder);
 }
 
 #tituloListaClientes {
-    color: white;
+    color: var(--texto);
     text-decoration: underline var(--cor4);
     font-size: 2em;
     margin: 5px 0 0 0;
@@ -175,7 +225,7 @@ main {
 #tabelaListaClientes {
     width: 100%;
     background-color: var(--cor2);
-    color: white;
+    color: var(--texto);
     border-collapse: collapse;
     table-layout: auto;
 }
@@ -199,7 +249,7 @@ main {
 }
 
 #bodyTabelaListaClientes td {
-    border-right: 1px solid white;
+    border-right: 1px solid var(--borda);
     width: min-content;
     font-size: 1.1em;
     padding: 0 8px 0 8px;
@@ -304,9 +354,13 @@ td#nomeCliente {
     transform: scale(1.05);
 }
 
+#botaoCadastrar img {
+    filter: var(--iconeFiltro);
+}
+
 /* Inputs e Formulários */
 .input {
-    color: white;
+    color: var(--texto);
     border: 2px solid var(--cor4);
     border-radius: 8px;
     padding: 10px 25px;
@@ -358,7 +412,7 @@ td#nomeCliente {
 }
 
 .input-group label {
-    color: white;
+    color: var(--texto);
     font-size: 0.9em;
     font-weight: bold;
 }
@@ -371,13 +425,13 @@ td#nomeCliente {
     display: block;
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.80);
+    background-color: var(--overlay);
     z-index: 9999;
 }
 
 #modalTitulo {
     text-align: center;
-    color: white;
+    color: var(--texto);
     text-decoration: underline var(--cor4);
     font-size: 1.8em;
 }
@@ -398,8 +452,8 @@ td#nomeCliente {
     font-size: 1em;
     padding: 8px;
     background-color: var(--cor0);
-    color: white;
-    border: 1px solid white;
+    color: var(--texto);
+    border: 1px solid var(--borda);
 }
 
 #modalObservacoes {
@@ -680,7 +734,7 @@ footer {
 
     .clienteIndividual:hover {
         background-color: transparent !important;
-        text-shadow: 0 0 3px black;
+        text-shadow: var(--sombraTexto);
     }
 
     .clienteIndividual td {
@@ -689,7 +743,7 @@ footer {
         align-items: flex-start;
         padding: 10px 15px;
         border: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid var(--bordaSuave);
         width: 100% !important;
         box-sizing: border-box;
         text-align: right;
@@ -723,7 +777,7 @@ footer {
     .clienteIndividual td::before {
         content: attr(data-label);
         font-weight: normal;
-        color: rgba(255, 255, 255, 0.5);
+        color: var(--textoSuave);
         text-align: left;
         margin-right: 10px;
         flex-shrink: 0;

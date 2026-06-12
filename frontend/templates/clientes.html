@@ -13,7 +13,10 @@
 <body>
     <header>
         <section id="cabeca">
-
+            <button type="button" id="btnTema" title="Trocar tema">
+                <i id="iconeTema" class="fa-solid fa-moon"></i>
+                <span id="labelTema">Escuro</span>
+            </button>
         </section>
     </header>
     <main>
@@ -85,7 +88,7 @@
                     <input type="text" id="modalEndereco" name="endereco" placeholder="Endereço">
                     <input type="text" id="modalEmergencia" name="contato_emergencia"
                         placeholder="Contato de Emergência">
-                    <span id="linkWppEmergencia" style="display: none;"><a href="#" target="_blank"
+                    <span id="linkWppEmergencia"><a href="#" target="_blank"
                             class="whatsapp-link" onclick="event.stopPropagation();" title="Conversar no WhatsApp">
                             <i class="fa-brands fa-whatsapp"></i>
                         </a></span>
@@ -113,22 +116,18 @@
                         <label for="modalUltimoPagamento">Último Pagamento</label>
                         <input type="date" id="modalUltimoPagamento" name="ultimo_pagamento" disabled>
                     </div>
-                    <div class="input-group" style="display: flex; align-items: flex-end; gap: 10px;">
-                        <div style="flex: 1;">
-                            <label for="modalVencimento">Data Vencimento</label>
-                            <input type="date" id="modalVencimento" name="data_vencimento">
-                        </div>
-                        <button type="button" id="btnConfirmarPagamento" title="Confirmar Pagamento"
-                            style="margin-bottom: 0; background-color: #2bff00; color: #171b20; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer;">
-                            <i class="fa-solid fa-check"></i>
-                        </button>
+                    <div class="input-group">
+                        <label for="modalVencimento">Data Vencimento</label>
+                        <input type="date" id="modalVencimento" name="data_vencimento">
                     </div>
                 </div>
                 <textarea id="modalObservacoes" name="observacoes" placeholder="Observações"></textarea>
                 <div id="botoesModal">
-                    <button type="button" id="btnExcluirModal" class="btnExcluir"
-                        style="display: none;">Excluir</button>
+                    <button type="button" id="btnExcluirModal" class="btnExcluir">Excluir</button>
                     <div id="botoesDireitaModal">
+                        <button type="button" id="btnConfirmarPagamento" title="Confirmar Pagamento">
+                            <i class="fa-solid fa-check"></i> Confirmar Pagamento
+                        </button>
                         <button type="submit" id="btnSalvar">Salvar</button>
                         <button type="button" id="btnCancelar">Fechar</button>
                     </div>
@@ -136,9 +135,9 @@
             </form>
         </div>
     </section>
-    <form id="formExcluirOculto" method="POST" style="display: none;">
+    <form id="formExcluirOculto" method="POST">
     </form>
-    <form id="formPagamentoOculto" method="POST" style="display: none;">
+    <form id="formPagamentoOculto" method="POST">
     </form>
     <section id="overlayModal">
     </section>

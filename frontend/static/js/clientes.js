@@ -1,4 +1,42 @@
 console.log("JS carregado!");
+const btnTema = document.getElementById("btnTema");
+const labelTema = document.getElementById("labelTema");
+const iconeTema = document.getElementById("iconeTema");
+
+function aplicarTema(tema) {
+    document.documentElement.dataset.theme = tema;
+    localStorage.setItem("tema", tema);
+
+    if (tema === "light") {
+        if (labelTema) labelTema.textContent = "Claro";
+        if (iconeTema) iconeTema.className = "fa-solid fa-sun";
+        return;
+    }
+
+    if (labelTema) labelTema.textContent = "Escuro";
+    if (iconeTema) iconeTema.className = "fa-solid fa-moon";
+}
+
+function carregarTemaInicial() {
+    const temaSalvo = localStorage.getItem("tema");
+    if (temaSalvo === "light" || temaSalvo === "dark") {
+        aplicarTema(temaSalvo);
+        return;
+    }
+
+    const prefereClaro = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+    aplicarTema(prefereClaro ? "light" : "dark");
+}
+
+carregarTemaInicial();
+
+if (btnTema) {
+    btnTema.addEventListener("click", function() {
+        const temaAtual = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+        aplicarTema(temaAtual === "light" ? "dark" : "light");
+    });
+}
+
 const botaoCadastrar = document.getElementById("botaoCadastrar");
 const modalCadastro = document.getElementById("modalCadastro");
 const overlayModal = document.getElementById("overlayModal");
