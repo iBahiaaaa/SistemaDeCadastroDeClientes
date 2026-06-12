@@ -371,7 +371,7 @@ td#nomeCliente {
 }
 
 #botaoCadastrar img {
-    filter: var(--iconeFiltro);
+    filter: brightness(0) saturate(100%);
 }
 
 #botaoCadastrar span {
