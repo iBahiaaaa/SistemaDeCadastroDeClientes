@@ -1,10 +1,16 @@
 /* From Uiverse.io by rishichawda */
 #theme-toggle-button {
-  font-size: 17px;
   position: relative;
   display: inline-block;
-  width: 7em;
+  width: 56px;
+  height: 36px;
   cursor: pointer;
+}
+
+#theme-toggle-button svg {
+  width: 56px;
+  height: 36px;
+  display: block;
 }
 
 #toggle {
