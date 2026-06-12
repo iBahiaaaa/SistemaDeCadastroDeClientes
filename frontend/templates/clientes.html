@@ -7,16 +7,14 @@
     <title>Clientes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme_toggle.css') }}">
     <link rel="shortcut icon" href="../static/imagens/person_add.svg" type="image/x-icon">
 </head>
 
 <body>
     <header>
         <section id="cabeca">
-            <button type="button" id="btnTema" title="Trocar tema">
-                <i id="iconeTema" class="fa-solid fa-moon"></i>
-                <span id="labelTema">Escuro</span>
-            </button>
+            {% include 'components/theme_toggle.html' %}
         </section>
     </header>
     <main>

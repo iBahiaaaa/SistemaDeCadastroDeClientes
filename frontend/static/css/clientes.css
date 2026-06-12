@@ -62,26 +62,6 @@ main {
     padding: 0 20px;
 }
 
-#btnTema {
-    background-color: var(--cor2);
-    color: var(--texto);
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 1em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.2s, transform 0.2s, border-color 0.2s;
-}
-
-#btnTema:hover {
-    background-color: var(--cor1);
-    border-color: var(--borda);
-    transform: scale(1.03);
-}
-
 /* Barra Lateral */
 #barraLateral {
     background-color: var(--cor2);

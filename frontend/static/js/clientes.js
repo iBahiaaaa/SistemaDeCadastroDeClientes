@@ -1,20 +1,13 @@
 console.log("JS carregado!");
-const btnTema = document.getElementById("btnTema");
-const labelTema = document.getElementById("labelTema");
-const iconeTema = document.getElementById("iconeTema");
+const toggleTema = document.getElementById("toggle");
 
 function aplicarTema(tema) {
     document.documentElement.dataset.theme = tema;
     localStorage.setItem("tema", tema);
 
-    if (tema === "light") {
-        if (labelTema) labelTema.textContent = "Claro";
-        if (iconeTema) iconeTema.className = "fa-solid fa-sun";
-        return;
+    if (toggleTema) {
+        toggleTema.checked = tema === "dark";
     }
-
-    if (labelTema) labelTema.textContent = "Escuro";
-    if (iconeTema) iconeTema.className = "fa-solid fa-moon";
 }
 
 function carregarTemaInicial() {
@@ -30,10 +23,9 @@ function carregarTemaInicial() {
 
 carregarTemaInicial();
 
-if (btnTema) {
-    btnTema.addEventListener("click", function() {
-        const temaAtual = document.documentElement.dataset.theme === "light" ? "light" : "dark";
-        aplicarTema(temaAtual === "light" ? "dark" : "light");
+if (toggleTema) {
+    toggleTema.addEventListener("change", function() {
+        aplicarTema(toggleTema.checked ? "dark" : "light");
     });
 }
 
