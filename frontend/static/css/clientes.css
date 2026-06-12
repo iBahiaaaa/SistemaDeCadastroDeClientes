@@ -158,6 +158,13 @@ main {
 
 .campoPesquisa {
     position: relative;
+    width: 44px;
+    overflow: hidden;
+    transition: width 0.25s ease;
+}
+
+.campoPesquisa:hover,
+.campoPesquisa:focus-within {
     width: 300px;
 }
 
@@ -187,6 +194,15 @@ main {
     color: var(--texto);
     border: 1px solid var(--borda);
     padding-left: 40px;
+}
+
+.campoPesquisa:not(:hover):not(:focus-within) #pesquisaClientes {
+    color: transparent;
+    caret-color: transparent;
+}
+
+.campoPesquisa:not(:hover):not(:focus-within) #pesquisaClientes::placeholder {
+    color: transparent;
 }
 
 #pesquisaClientes::placeholder {
@@ -672,6 +688,24 @@ footer {
         flex-direction: column;
         gap: 10px;
         justify-content: center;
+    }
+
+    .campoPesquisa {
+        width: 100%;
+    }
+
+    .campoPesquisa:hover,
+    .campoPesquisa:focus-within {
+        width: 100%;
+    }
+
+    .campoPesquisa:not(:hover):not(:focus-within) #pesquisaClientes {
+        color: var(--texto);
+        caret-color: auto;
+    }
+
+    .campoPesquisa:not(:hover):not(:focus-within) #pesquisaClientes::placeholder {
+        color: var(--placeholder);
     }
 
     #botaoCadastrar {
