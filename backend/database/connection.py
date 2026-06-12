@@ -40,7 +40,7 @@ def close_connection(conexao):
         conexao.close()
 
 
-def execute_query(query, params=(), is_select=False):
+def execute_query(query, params=(), is_select=False, return_lastrowid=False):
     """
     Executa uma query.
     """
@@ -58,6 +58,8 @@ def execute_query(query, params=(), is_select=False):
             return cursor.fetchall()
 
         conexao.commit()
+        if return_lastrowid:
+            return cursor.lastrowid
         return True
 
     except Exception as e:

@@ -1,5 +1,7 @@
 console.log("JS carregado!");
 const toggleTema = document.getElementById("toggle");
+const usuarioMenu = document.querySelector(".usuarioMenu");
+const usuarioMenuBotao = document.querySelector(".usuarioMenu-botao");
 
 function aplicarTema(tema) {
     document.documentElement.dataset.theme = tema;
@@ -29,6 +31,24 @@ if (toggleTema) {
     });
 }
 
+if (usuarioMenu && usuarioMenuBotao) {
+    usuarioMenuBotao.addEventListener("click", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        usuarioMenu.classList.toggle("aberto");
+    });
+
+    document.addEventListener("click", function() {
+        usuarioMenu.classList.remove("aberto");
+    });
+
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") {
+            usuarioMenu.classList.remove("aberto");
+        }
+    });
+}
+
 const botaoCadastrar = document.getElementById("botaoCadastrar");
 const modalCadastro = document.getElementById("modalCadastro");
 const overlayModal = document.getElementById("overlayModal");
@@ -41,6 +61,7 @@ const btnSalvar = document.getElementById("btnSalvar");
 
 const inputId = document.getElementById("id_cliente");
 const inputNome = document.getElementById("modalNome");
+const inputEmail = document.getElementById("modalEmail");
 const inputWhatsapp = document.getElementById("modalWhatsapp");
 const inputEndereco = document.getElementById("modalEndereco");
 const inputEmergencia = document.getElementById("modalEmergencia");
@@ -53,6 +74,8 @@ const inputUltimoPagamento = document.getElementById("modalUltimoPagamento");
 const inputObs = document.getElementById("modalObservacoes");
 const linkWppEmergencia = document.getElementById("linkWppEmergencia");
 const linkWppEmergenciaAnchor = linkWppEmergencia.querySelector("a");
+const rowAtivacao = document.getElementById("rowAtivacao");
+const inputAtivacaoCodigo = document.getElementById("modalAtivacaoCodigo");
 
 const btnExcluirModal = document.getElementById("btnExcluirModal");
 const btnConfirmarPagamento = document.getElementById("btnConfirmarPagamento");
@@ -96,6 +119,7 @@ botaoCadastrar.addEventListener("click", function() {
 
     inputId.value = "";
     inputNome.value = "";
+    inputEmail.value = "";
     inputWhatsapp.value = "";
     inputEndereco.value = "";
     inputEmergencia.value = "";
@@ -106,6 +130,8 @@ botaoCadastrar.addEventListener("click", function() {
     inputVencimento.value = dataVencimento; // Preenche com data daqui a 1 mês
     inputUltimoPagamento.value = ""; // Limpa o campo de último pagamento
     inputObs.value = "";
+    inputAtivacaoCodigo.value = "";
+    rowAtivacao.style.display = "none";
 
     // Esconder o link do WhatsApp de emergência para novo cadastro
     atualizarLinkWppEmergencia("");
@@ -159,6 +185,7 @@ function renderizarTabelaClientes(clientes) {
         tr.className = "clienteIndividual";
         tr.dataset.id = cliente.id;
         tr.dataset.nome = cliente.nome || "";
+        tr.dataset.email = cliente.email || "";
         tr.dataset.whatsapp = cliente.whatsapp || "";
         tr.dataset.endereco = cliente.endereco || "";
         tr.dataset.plano = cliente.plano || "";
@@ -169,6 +196,8 @@ function renderizarTabelaClientes(clientes) {
         tr.dataset.emergencia = cliente.contato_emergencia || "";
         tr.dataset.status = cliente.status || "";
         tr.dataset.observacoes = cliente.observacoes || "";
+        tr.dataset.activation_code = cliente.activation_code || "";
+        tr.dataset.conta_ativa = String(cliente.conta_ativa || 0);
 
         // Celula WhatsApp com link
         let whatsappHtml = cliente.whatsapp || "";
@@ -198,6 +227,7 @@ function renderizarTabelaClientes(clientes) {
         tr.addEventListener("click", function() {
             inputId.value = this.dataset.id;
             inputNome.value = this.dataset.nome;
+            inputEmail.value = this.dataset.email;
             inputWhatsapp.value = this.dataset.whatsapp;
             inputEndereco.value = this.dataset.endereco;
             inputEmergencia.value = this.dataset.emergencia;
@@ -208,6 +238,13 @@ function renderizarTabelaClientes(clientes) {
             inputVencimento.value = this.dataset.vencimento;
             inputUltimoPagamento.value = this.dataset.ultimo_pagamento || "";
             inputObs.value = this.dataset.observacoes;
+            inputAtivacaoCodigo.value = "";
+            rowAtivacao.style.display = "none";
+
+            if (this.dataset.email && this.dataset.activation_code && this.dataset.conta_ativa !== "1") {
+                inputAtivacaoCodigo.value = this.dataset.activation_code;
+                rowAtivacao.style.display = "flex";
+            }
 
             // Atualizar o link do WhatsApp de emergência
             atualizarLinkWppEmergencia(this.dataset.emergencia);

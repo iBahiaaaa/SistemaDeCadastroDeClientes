@@ -1,6 +1,11 @@
 @charset "UTF-8";
 
 /* Configurações Globais e Variáveis */
+
+* {
+    font: 100% "Noto Sans", sans-serif;
+}
+
 :root {
     --cor0: #2b333b;
     --cor1: #25292e;
@@ -71,6 +76,94 @@ main {
     padding: 0 20px;
 }
 
+#cabecaDireita {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.usuarioMenu {
+    position: relative;
+}
+
+.usuarioMenu::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 12px;
+}
+
+.usuarioMenu-botao {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    padding: 8px 10px;
+    color: var(--texto);
+    cursor: pointer;
+    text-shadow: var(--sombraTexto);
+    margin: 10px 30px 0 0;
+}
+
+.usuarioMenu-botao i {
+    font-size: 0.85em;
+    opacity: 0.85;
+    transition: transform 0.3s ease;
+    transform-origin: 50% 50%;
+}
+
+.usuarioMenu:hover .usuarioMenu-botao i,
+.usuarioMenu.aberto .usuarioMenu-botao i,
+.usuarioMenu:focus-within .usuarioMenu-botao i {
+    transform: rotate(180deg);
+}
+
+.usuarioMenu-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 150px;
+    background-color: var(--cor2);
+    border: 1px solid var(--bordaSuave);
+    border-radius: 12px;
+    box-shadow: var(--sombra);
+    padding: 8px;
+    display: none;
+    z-index: 20;
+    margin: 5px 30px 0 0;
+}
+
+.usuarioMenu:hover .usuarioMenu-dropdown,
+.usuarioMenu:focus-within .usuarioMenu-dropdown,
+.usuarioMenu.aberto .usuarioMenu-dropdown {
+    display: block;
+}
+
+.usuarioMenu-item {
+    display: block;
+    padding: 10px 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--texto);
+}
+
+.usuarioMenu-item:hover {
+    background-color: var(--cor4);
+}
+
+.usuarioMenu-sair {
+    color: #ffffff;
+}
+
+#usuarioMenu-sair:hover {
+    color: #ffffff;
+    background-color: red;
+}
+
 /* Barra Lateral */
 #barraLateral {
     background-color: var(--cor2);
@@ -93,7 +186,24 @@ main {
     margin: 0 0 10px 0;
 }
 
+#barraLateral .sidebar-link {
+    font-size: 1.7em;
+    color: var(--texto);
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-shadow: var(--sombraTexto);
+    height: 50px;
+    margin: 0 0 10px 0;
+    text-decoration: none;
+}
+
 #barraLateral h1:hover {
+    background-color: var(--cor4);
+}
+
+#barraLateral .sidebar-link:hover {
     background-color: var(--cor4);
 }
 
@@ -115,29 +225,21 @@ main {
     background-color: var(--cor4);
 }
 
-#sairLateral {
-    background-color: #ff0000;
-    margin-top: auto;
-}
-
-#sairLateral:hover,
-#sairLateral:hover h1 {
-    background-color: #ce0000;
-}
-
 /* Conteúdo Geral e Layout da Lista */
 #conteudoGeral {
     flex: 1;
     display: flex;
     flex-direction: column;
     min-width: 0;
+    gap: 18px;
+    padding: 20px;
 }
 
 #cadastroClientes {
-    margin: 0 20px 10px 20px;
-    height: 30px;
     background-color: var(--cor2);
-    padding: 20px;
+    border: 1px solid var(--bordaSuave);
+    border-radius: 16px;
+    padding: 24px;
 }
 
 #divTituloListaClientes {
@@ -215,7 +317,7 @@ main {
     color: var(--texto);
     text-decoration: underline var(--cor4);
     font-size: 2em;
-    margin: 5px 0 0 0;
+    margin: 0;
     flex: 1;
     text-align: center;
     position: absolute;
@@ -229,15 +331,18 @@ main {
     min-height: 0;
     overflow-y: auto;
     overflow-x: auto;
-    margin-left: 20px;
-    margin-right: 20px;
+    background-color: var(--cor2);
+    border: 1px solid var(--bordaSuave);
+    border-radius: 16px;
+    padding: 20px;
 }
 
 #tabelaListaClientes {
     width: 100%;
-    background-color: var(--cor2);
+    background-color: transparent;
     color: var(--texto);
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     table-layout: auto;
 }
 
@@ -251,33 +356,48 @@ main {
     font-size: 1.3em;
 }
 
+#cabecaTabelaClientes th:first-child {
+    border-top-left-radius: 12px;
+}
+
+#cabecaTabelaClientes th:last-child {
+    border-top-right-radius: 12px;
+}
+
 #cabecaTabelaClientes th {
     position: sticky;
     top: 0;
     z-index: 1;
     background-color: var(--cor3);
     height: 40px;
+    padding: 8px 10px;
 }
 
 #bodyTabelaListaClientes td {
-    border-right: 1px solid var(--borda);
+    border-right: 1px solid var(--bordaSuave);
+    border-bottom: 1px solid var(--bordaSuave);
     width: min-content;
     font-size: 1.1em;
-    padding: 0 8px 0 8px;
+    padding: 0 10px 0 10px;
 }
 
 #bodyTabelaListaClientes tr:nth-child(even) {
-    background-color: var(--cor3);
+    background-color: var(--cor1);
+}
+
+#bodyTabelaListaClientes tr:nth-child(odd) {
+    background-color: var(--cor2);
 }
 
 .clienteIndividual {
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 .clienteIndividual:hover {
     background-color: var(--cor4) !important;
     text-shadow: 0 0 3px black;
+    transform: translateY(-1px);
 }
 
 .clienteIndividual td {
@@ -463,6 +583,7 @@ td#nomeCliente {
 }
 
 #modalNome,
+#modalEmail,
 #modalWhatsapp,
 #modalEndereco,
 #modalEmergencia,
@@ -472,6 +593,7 @@ td#nomeCliente {
 #modalMatricula,
 #modalVencimento,
 #modalUltimoPagamento,
+#modalAtivacaoCodigo,
 #modalObservacoes {
     border-radius: 6px;
     font-weight: 550;
@@ -480,6 +602,10 @@ td#nomeCliente {
     background-color: var(--cor0);
     color: var(--texto);
     border: 1px solid var(--borda);
+}
+
+#rowAtivacao {
+    display: none;
 }
 
 #modalObservacoes {
@@ -674,10 +800,6 @@ footer {
         margin: 0 !important;
         width: 30px;
         height: 30px;
-    }
-
-    #sairLateral {
-        display: none;
     }
 
     /* Layout Mobile */

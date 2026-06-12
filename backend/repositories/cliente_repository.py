@@ -1,5 +1,6 @@
 from backend.database.connection import execute_query
 from datetime import datetime, timedelta
+import secrets
 
 
 def calcular_status_automatico(data_vencimento):
@@ -97,6 +98,7 @@ def calcular_data_vencimento(data_referencia, periodo_plano):
 
 def salvar_cliente(
     nome,
+    email,
     whatsapp,
     endereco,
     plano,
@@ -114,6 +116,7 @@ def salvar_cliente(
     query = """
         INSERT INTO clientes (
             nome,
+            email,
             whatsapp,
             endereco,
             plano,
@@ -125,11 +128,12 @@ def salvar_cliente(
             status,
             observacoes
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)
     """
 
     params = (
         nome,
+        email,
         whatsapp,
         endereco,
         plano,
@@ -141,7 +145,7 @@ def salvar_cliente(
         observacoes
     )
 
-    return execute_query(query, params)
+    return execute_query(query, params, return_lastrowid=True)
 
 
 def buscar_clientes():
@@ -151,18 +155,21 @@ def buscar_clientes():
 
     query = """
         SELECT
-            id,
-            nome,
-            whatsapp,
-            endereco,
-            plano,
-            valor_plano,
-            data_matricula,
-            data_vencimento,
-            ultimo_pagamento,
-            contato_emergencia,
-            observacoes
-        FROM clientes
+            c.id,
+            c.nome,
+            c.email,
+            c.whatsapp,
+            c.endereco,
+            c.plano,
+            c.valor_plano,
+            c.data_matricula,
+            c.data_vencimento,
+            c.ultimo_pagamento,
+            c.contato_emergencia,
+            c.observacoes,
+            (SELECT u.activation_code FROM usuarios u WHERE u.cliente_id = c.id) AS activation_code,
+            (SELECT CASE WHEN u.senha_hash IS NOT NULL AND u.senha_hash <> '' THEN 1 ELSE 0 END FROM usuarios u WHERE u.cliente_id = c.id) AS conta_ativa
+        FROM clientes c
         ORDER BY nome
     """
 
@@ -188,19 +195,22 @@ def buscar_cliente_por_id(id_cliente):
 
     query = """
         SELECT
-            id,
-            nome,
-            whatsapp,
-            endereco,
-            plano,
-            valor_plano,
-            data_matricula,
-            data_vencimento,
-            ultimo_pagamento,
-            contato_emergencia,
-            observacoes
-        FROM clientes
-        WHERE id = ?
+            c.id,
+            c.nome,
+            c.email,
+            c.whatsapp,
+            c.endereco,
+            c.plano,
+            c.valor_plano,
+            c.data_matricula,
+            c.data_vencimento,
+            c.ultimo_pagamento,
+            c.contato_emergencia,
+            c.observacoes,
+            (SELECT u.activation_code FROM usuarios u WHERE u.cliente_id = c.id) AS activation_code,
+            (SELECT CASE WHEN u.senha_hash IS NOT NULL AND u.senha_hash <> '' THEN 1 ELSE 0 END FROM usuarios u WHERE u.cliente_id = c.id) AS conta_ativa
+        FROM clientes c
+        WHERE c.id = ?
     """
 
     resultado = execute_query(query, (id_cliente,), is_select=True)
@@ -211,9 +221,35 @@ def buscar_cliente_por_id(id_cliente):
     return None
 
 
+def buscar_nome_cliente_por_id(id_cliente):
+    resultado = execute_query(
+        "SELECT nome FROM clientes WHERE id = ?",
+        (id_cliente,),
+        is_select=True
+    )
+    if not resultado:
+        return None
+    return dict(resultado[0]).get("nome")
+
+
+def buscar_cliente_por_email(email):
+    if not email:
+        return None
+
+    resultado = execute_query(
+        "SELECT id, nome, email FROM clientes WHERE LOWER(email) = ? LIMIT 1",
+        (email.strip().lower(),),
+        is_select=True
+    )
+    if not resultado:
+        return None
+    return dict(resultado[0])
+
+
 def atualizar_cliente(
     id_cliente,
     nome,
+    email,
     whatsapp,
     endereco,
     plano,
@@ -232,6 +268,7 @@ def atualizar_cliente(
         UPDATE clientes
         SET
             nome = ?,
+            email = ?,
             whatsapp = ?,
             endereco = ?,
             plano = ?,
@@ -246,6 +283,7 @@ def atualizar_cliente(
 
     params = (
         nome,
+        email,
         whatsapp,
         endereco,
         plano,
@@ -278,33 +316,37 @@ def pesquisar_clientes(termo_pesquisa):
 
     query = """
         SELECT
-            id,
-            nome,
-            whatsapp,
-            endereco,
-            plano,
-            valor_plano,
-            data_matricula,
-            data_vencimento,
-            ultimo_pagamento,
-            contato_emergencia,
-            observacoes
-        FROM clientes
+            c.id,
+            c.nome,
+            c.email,
+            c.whatsapp,
+            c.endereco,
+            c.plano,
+            c.valor_plano,
+            c.data_matricula,
+            c.data_vencimento,
+            c.ultimo_pagamento,
+            c.contato_emergencia,
+            c.observacoes,
+            (SELECT u.activation_code FROM usuarios u WHERE u.cliente_id = c.id) AS activation_code,
+            (SELECT CASE WHEN u.senha_hash IS NOT NULL AND u.senha_hash <> '' THEN 1 ELSE 0 END FROM usuarios u WHERE u.cliente_id = c.id) AS conta_ativa
+        FROM clientes c
         WHERE 
-            nome LIKE ? OR
-            whatsapp LIKE ? OR
-            endereco LIKE ? OR
-            plano LIKE ? OR
-            valor_plano LIKE ? OR
-            data_matricula LIKE ? OR
-            data_vencimento LIKE ? OR
-            contato_emergencia LIKE ? OR
-            observacoes LIKE ?
+            c.nome LIKE ? OR
+            c.email LIKE ? OR
+            c.whatsapp LIKE ? OR
+            c.endereco LIKE ? OR
+            c.plano LIKE ? OR
+            c.valor_plano LIKE ? OR
+            c.data_matricula LIKE ? OR
+            c.data_vencimento LIKE ? OR
+            c.contato_emergencia LIKE ? OR
+            c.observacoes LIKE ?
         ORDER BY nome
     """
 
     termo = f"%{termo_pesquisa}%"
-    params = (termo, termo, termo, termo, termo, termo, termo, termo, termo)
+    params = (termo, termo, termo, termo, termo, termo, termo, termo, termo, termo)
 
     clientes = execute_query(query, params, is_select=True)
 
@@ -353,3 +395,83 @@ def registrar_pagamento(id_cliente):
             return execute_query(query, params)
     
     return False
+
+
+def email_em_uso_em_outro_cliente(email, id_cliente=None):
+    if not email:
+        return False
+
+    email = email.strip().lower()
+    if id_cliente:
+        resultado = execute_query(
+            "SELECT id FROM clientes WHERE LOWER(email) = ? AND id <> ? LIMIT 1",
+            (email, id_cliente),
+            is_select=True
+        )
+    else:
+        resultado = execute_query(
+            "SELECT id FROM clientes WHERE LOWER(email) = ? LIMIT 1",
+            (email,),
+            is_select=True
+        )
+
+    return bool(resultado)
+
+
+def email_em_uso_em_usuario(email, cliente_id=None):
+    if not email:
+        return False
+
+    email = email.strip().lower()
+    if cliente_id:
+        resultado = execute_query(
+            "SELECT id FROM usuarios WHERE LOWER(email) = ? AND (cliente_id IS NULL OR cliente_id <> ?) LIMIT 1",
+            (email, cliente_id),
+            is_select=True
+        )
+    else:
+        resultado = execute_query(
+            "SELECT id FROM usuarios WHERE LOWER(email) = ? LIMIT 1",
+            (email,),
+            is_select=True
+        )
+
+    return bool(resultado)
+
+
+def garantir_conta_aluno(cliente_id, email):
+    if not email:
+        return True
+
+    email = email.strip().lower()
+
+    existente = execute_query(
+        "SELECT id, email, senha_hash FROM usuarios WHERE cliente_id = ? LIMIT 1",
+        (cliente_id,),
+        is_select=True
+    )
+
+    if existente:
+        usuario = dict(existente[0])
+        if (usuario.get("email") or "").strip().lower() != email:
+            if email_em_uso_em_usuario(email, cliente_id=cliente_id):
+                return None
+            return execute_query(
+                "UPDATE usuarios SET email = ? WHERE id = ?",
+                (email, usuario["id"])
+            )
+        return True
+
+    if email_em_uso_em_usuario(email):
+        return None
+
+    codigo = secrets.token_urlsafe(6)
+    criado_em = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    return execute_query(
+        """
+        INSERT INTO usuarios (email, senha_hash, cargo, cliente_id, activation_code, activation_created_at)
+        VALUES (?, NULL, 'ALUNO', ?, ?, ?)
+        """,
+        (email, cliente_id, codigo, criado_em)
+    )

@@ -14,25 +14,34 @@
 <body>
     <header>
         <section id="cabeca">
-            {% include 'components/theme_toggle.html' %}
+            <div id="cabecaDireita">
+                <div class="usuarioMenu">
+                    <button class="usuarioMenu-botao" type="button">
+                        Olá, {{ usuario_nome or 'Usuário' }}
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="usuarioMenu-dropdown">
+                        <a class="usuarioMenu-item" href="/perfil">Meu Perfil</a>
+                        <a class="usuarioMenu-item usuarioMenu-sair" id="usuarioMenu-sair" href="/logout">Sair / Deslogar</a>
+                    </div>
+                </div>
+                {% include 'components/theme_toggle.html' %}
+            </div>
         </section>
     </header>
     <main>
         <section id="barraLateral">
             <div>
-                <h1 id="paginaAtual"><img src="../static/imagens/group.svg" alt="Clientes">Clientes</h1>
+                <a class="sidebar-link" id="paginaAtual" href="/"><img src="../static/imagens/group.svg" alt="Clientes">Clientes</a>
                 <h1><img src="../static/imagens/card.svg" alt="Planos">Planos</h1>
                 <h1><img src="../static/imagens/money.svg" alt="Pagamentos">Pagamentos</h1>
                 <h1><img src="../static/imagens/warning.svg" alt="Inadimplência">Inadimplência</h1>
                 <h1><img src="../static/imagens/halter.svg" alt="Treinos">Treinos</h1>
                 <h1><img src="../static/imagens/prancheta.svg" alt="Avaliação">Avaliação</h1>
                 <h1><img src="../static/imagens/personCheck.svg" alt="Frequência">Frequência</h1>
-                <h1><img src="../static/imagens/work.svg" alt="Funcionários">Funcionários</h1>
+                <a class="sidebar-link" href="/funcionarios"><img src="../static/imagens/work.svg" alt="Funcionários">Funcionários</a>
                 <h1><img src="../static/imagens/relatorios.svg" alt="Relatórios">Relatórios</h1>
                 <h1><img src="../static/imagens/settings.svg" alt="Configuração">Configuração</h1>
-            </div>
-            <div id="sairLateral">
-                <h1><img src="../static/imagens/sair.svg" alt="Sair">Sair</h1>
             </div>
         </section>
         <section id="conteudoGeral">
@@ -80,7 +89,14 @@
                 <input type="hidden" name="id_cliente" id="id_cliente">
                 <div class="modal-row">
                     <input type="text" id="modalNome" name="nome" placeholder="Nome do aluno*" required>
+                    <input type="email" id="modalEmail" name="email" placeholder="Email de acesso">
                     <input type="tel" id="modalWhatsapp" name="whatsapp" placeholder="Whatsapp">
+                </div>
+                <div class="modal-row" id="rowAtivacao">
+                    <div class="input-group">
+                        <label for="modalAtivacaoCodigo">Código de ativação</label>
+                        <input type="text" id="modalAtivacaoCodigo" disabled>
+                    </div>
                 </div>
                 <div class="modal-row">
                     <input type="text" id="modalEndereco" name="endereco" placeholder="Endereço">

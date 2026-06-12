@@ -1,7 +1,26 @@
-from flask import Flask, render_template, request, redirect
+import os
+
+from criar_banco import inicializar_banco
+from migrar_banco import migrar_banco
+
+from flask import Flask
+
+from backend.middlewares.auth_middleware import exigir_login
+from backend.controllers.auth_controller import (
+    login,
+    logout,
+    ativar_conta
+)
+from backend.controllers.funcionario_controller import (
+    pagina_funcionarios,
+    atualizar_cargo
+)
+from backend.controllers.pagina_controller import (
+    inicio,
+    perfil
+)
 from backend.controllers.cliente_controller import (
     cadastrar_cliente,
-    listar_clientes,
     deletar_cliente,
     pesquisar_cliente_controller,
     registrar_pagamento_controller
@@ -13,30 +32,30 @@ app = Flask(
     static_folder="frontend/static"
 )
 
-@app.route("/")
-def inicio():
-    clientes = listar_clientes()
-    return render_template("clientes.html", clientes=clientes)
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
-@app.route("/cadastrar", methods=["POST"])
-def cadastrar():
+inicializar_banco()
+migrar_banco()
 
-    return cadastrar_cliente()
+app.before_request(exigir_login)
 
-@app.route("/excluir/<int:id_cliente>", methods=["POST"])
-def excluir(id_cliente):
+app.add_url_rule("/", view_func=inicio, methods=["GET"])
+app.add_url_rule("/perfil", view_func=perfil, methods=["GET"])
+app.add_url_rule("/funcionarios", view_func=pagina_funcionarios, methods=["GET"])
 
-    return deletar_cliente(id_cliente)
-    
+app.add_url_rule("/login", view_func=login, methods=["GET", "POST"])
+app.add_url_rule("/logout", view_func=logout, methods=["GET"])
+app.add_url_rule("/ativar-conta", view_func=ativar_conta, methods=["GET", "POST"])
 
-@app.route("/pesquisar", methods=["GET"])
-def pesquisar():
-    return pesquisar_cliente_controller()
-
-
-@app.route("/registrar-pagamento/<int:id_cliente>", methods=["POST"])
-def registrar_pagamento_route(id_cliente):
-    return registrar_pagamento_controller(id_cliente)
+app.add_url_rule("/cadastrar", view_func=cadastrar_cliente, methods=["POST"])
+app.add_url_rule("/excluir/<int:id_cliente>", view_func=deletar_cliente, methods=["POST"])
+app.add_url_rule("/pesquisar", view_func=pesquisar_cliente_controller, methods=["GET"])
+app.add_url_rule("/funcionarios/<int:id_usuario>/cargo", view_func=atualizar_cargo, methods=["POST"])
+app.add_url_rule(
+    "/registrar-pagamento/<int:id_cliente>",
+    view_func=registrar_pagamento_controller,
+    methods=["POST"]
+)
 
 
 if __name__ == "__main__":
