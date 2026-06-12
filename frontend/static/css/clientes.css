@@ -161,6 +161,9 @@ main {
     width: 44px;
     overflow: hidden;
     transition: width 0.25s ease;
+    border-radius: 8px;
+    background-color: var(--cor0);
+    border: 1px solid var(--borda);
 }
 
 .campoPesquisa:hover,
@@ -187,12 +190,11 @@ main {
 }
 
 #pesquisaClientes {
-    border-radius: 8px;
     font-size: 1em;
     padding: 8px 16px;
-    background-color: var(--cor0);
+    background-color: transparent;
     color: var(--texto);
-    border: 1px solid var(--borda);
+    border: none;
     padding-left: 40px;
 }
 
@@ -350,7 +352,7 @@ td#nomeCliente {
     color: #171b20;
     border: 2px solid #2bff00;
     border-radius: 8px;
-    padding: 8px 12px;
+    padding: 8px 10px;
     background: #2bff00;
     font-size: 1em;
     cursor: pointer;
