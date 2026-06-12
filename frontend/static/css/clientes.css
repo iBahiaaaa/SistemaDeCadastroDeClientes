@@ -350,21 +350,36 @@ td#nomeCliente {
     color: #171b20;
     border: 2px solid #2bff00;
     border-radius: 8px;
-    padding: 8px 15px;
+    padding: 8px 12px;
     background: #2bff00;
     font-size: 1em;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.2s;
+    width: 44px;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: width 0.25s ease, background-color 0.2s, transform 0.2s, border-color 0.2s;
 }
 
-#botaoCadastrar:hover {
+#botaoCadastrar:hover,
+#botaoCadastrar:focus-within {
     background-color: #128c7e;
     border-color: #128c7e;
+    width: 210px;
     transform: scale(1.05);
 }
 
 #botaoCadastrar img {
     filter: var(--iconeFiltro);
+}
+
+#botaoCadastrar span {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+#botaoCadastrar:hover span,
+#botaoCadastrar:focus-within span {
+    opacity: 1;
 }
 
 /* Inputs e Formulários */
