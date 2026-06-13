@@ -1,16 +1,7 @@
 <header>
     <section id="cabeca">
         <div id="cabecaDireita">
-            <div class="usuarioMenu">
-                <button class="usuarioMenu-botao" type="button">
-                    Olá, {{ usuario_nome or 'Usuário' }}
-                    <i class="fa-solid fa-chevron-down"></i>
-                </button>
-                <div class="usuarioMenu-dropdown">
-                    <a class="usuarioMenu-item" href="/perfil">Meu Perfil</a>
-                    <a class="usuarioMenu-item usuarioMenu-sair" id="usuarioMenu-sair" href="/logout">Sair / Deslogar</a>
-                </div>
-            </div>
+            {% include 'components/usuario_menu.html' %}
             {% include 'components/theme_toggle.html' %}
         </div>
     </section>
