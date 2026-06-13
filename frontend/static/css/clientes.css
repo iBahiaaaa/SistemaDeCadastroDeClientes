@@ -172,6 +172,7 @@ main {
     transition: width 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
+    border-bottom-right-radius: 10px;
 }
 
 #barraLateral h1 {
@@ -184,6 +185,7 @@ main {
     text-shadow: var(--sombraTexto);
     height: 50px;
     margin: 0 0 10px 0;
+    border-bottom-right-radius: 10px;
 }
 
 #barraLateral .sidebar-link {
@@ -197,6 +199,7 @@ main {
     height: 50px;
     margin: 0 0 10px 0;
     text-decoration: none;
+    border-bottom-right-radius: 10px;
 }
 
 #barraLateral h1:hover {
@@ -232,7 +235,7 @@ main {
     flex-direction: column;
     min-width: 0;
     gap: 18px;
-    padding: 20px;
+    padding: 20px 20px 0px 20px;
 }
 
 #cadastroClientes {
@@ -334,7 +337,7 @@ main {
     background-color: var(--cor2);
     border: 1px solid var(--bordaSuave);
     border-radius: 16px;
-    padding: 20px;
+    padding: 0;
 }
 
 #tabelaListaClientes {
@@ -472,7 +475,7 @@ td#nomeCliente {
     color: #171b20;
     border: 2px solid #2bff00;
     border-radius: 8px;
-    padding: 8px 10px;
+    padding: 8px 9px;
     background: #2bff00;
     font-size: 1em;
     cursor: pointer;
@@ -497,6 +500,7 @@ td#nomeCliente {
 #botaoCadastrar span {
     opacity: 0;
     transition: opacity 0.2s ease;
+    font-weight: bolder;
 }
 
 #botaoCadastrar:hover span,
@@ -703,25 +707,42 @@ td#nomeCliente {
 }
 
 /* Cores de Status */
-.status-pago {
+
+.Status {
     text-align: center;
+}
+
+.Pago,
+.Pendente,
+.Inadimplente {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.Pago {
     background-color: #008000;
     color: #2bff00 !important;
-    font-weight: bold;
 }
 
-.status-pendente {
-    text-align: center;
+.Pendente {
     background-color: #808000;
     color: #fbff00 !important;
-    font-weight: bold;
 }
 
-.status-inadimplente {
-    text-align: center;
+.Inadimplente {
     background-color: #800000;
     color: #ff0000 !important;
-    font-weight: bold;
+}
+
+td {
+    text-align: center;
+}
+
+td.Nome,
+td.Observacoes {
+    text-align: left;
 }
 
 .btn-pagamento {
@@ -860,6 +881,7 @@ footer {
     #botaoCadastrar:hover {
         width: 40px !important;
     }
+
 
     #conteudoTabelaListaClientes {
         margin-left: 0;

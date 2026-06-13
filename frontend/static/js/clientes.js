@@ -214,13 +214,13 @@ function renderizarTabelaClientes(clientes) {
         }
 
         tr.innerHTML = `
-            <td data-label="Nome">${cliente.nome || ""}</td>
+            <td class="Nome" data-label="Nome">${cliente.nome || ""}</td>
             <td data-label="Whatsapp">${whatsappHtml}</td>
             <td data-label="Matricula">${formatarDataBr(cliente.data_matricula)}</td>
             <td data-label="Plano">${cliente.plano ? cliente.plano.charAt(0).toUpperCase() + cliente.plano.slice(1) : ""}</td>
             <td data-label="Vencimento">${formatarDataBr(cliente.data_vencimento)}</td>
-            <td data-label="Status" class="${cliente.status || ''}">${cliente.status || ""}</td>
-            <td data-label="Observacoes">${cliente.observacoes || ""}</td>
+            <td class="Status" data-label="Status"><span class="${cliente.status || ''}">${cliente.status || ""}</span></td>
+            <td class="Observacoes" data-label="Observacoes">${cliente.observacoes || ""}</td>
         `;
 
         // Adiciona evento de clique para editar
