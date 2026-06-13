@@ -1,76 +1,27 @@
-import sqlite3
 import os
+from dotenv import load_dotenv
+from supabase import create_client, Client
 
-DB_TYPE = "SQLITE"
-DB_PATH = os.path.join("backend", "database", "banco.db")
+# Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
 
+# Configuração do Supabase
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
-def get_connection():
+def get_supabase() -> Client:
     """
-    Retorna uma conexão com o banco de dados.
+    Retorna uma instância do cliente Supabase.
     """
-
-    if DB_TYPE == "SQLITE":
-        try:
-            conexao = sqlite3.connect(DB_PATH)
-
-            # Permite acessar colunas pelo nome
-            conexao.row_factory = sqlite3.Row
-
-            return conexao
-
-        except sqlite3.Error as e:
-            print(f"Erro ao conectar ao SQLite: {e}")
-            return None
-
-    elif DB_TYPE == "POSTGRES":
-        raise NotImplementedError(
-            "Conexão com PostgreSQL ainda não implementada."
-        )
-
-    return None
-
-
-def close_connection(conexao):
-    """
-    Fecha a conexão com o banco.
-    """
-
-    if conexao:
-        conexao.close()
-
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        raise Exception("Variáveis de ambiente SUPABASE_URL e SUPABASE_KEY são necessárias")
+    
+    return create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def execute_query(query, params=(), is_select=False, return_lastrowid=False):
     """
-    Executa uma query.
+    Essa função existe para manter a compatibilidade com o código antigo.
+    Vamos atualizar todas as chamadas para usar diretamente o cliente Supabase nos repositórios.
     """
-
-    conexao = get_connection()
-
-    if not conexao:
-        return None
-
-    try:
-        cursor = conexao.cursor()
-        cursor.execute(query, params)
-
-        if is_select:
-            return cursor.fetchall()
-
-        conexao.commit()
-        if return_lastrowid:
-            return cursor.lastrowid
-        return True
-
-    except Exception as e:
-        print(f"Erro ao executar query: {e}")
-
-        try:
-            conexao.rollback()
-        except:
-            pass
-
-        return None
-
-    finally:
-        close_connection(conexao)
+    print("Aviso: execute_query está deprecated. Use get_supabase() diretamente.")
+    return None

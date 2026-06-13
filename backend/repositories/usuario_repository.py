@@ -1,4 +1,4 @@
-from backend.database.connection import execute_query
+from backend.database.connection import get_supabase
 
 CARGOS_VALIDOS = ("ADM", "FUNCIONARIO", "INSTRUTOR", "FINANCEIRO", "ALUNO")
 
@@ -7,59 +7,57 @@ def buscar_usuario_por_email(email):
     if not email:
         return None
 
-    resultado = execute_query(
-        """
-        SELECT
-            id,
-            nome,
-            email,
-            senha_hash,
-            cargo,
-            cliente_id,
-            activation_code,
-            activation_created_at
-        FROM usuarios
-        WHERE LOWER(email) = ?
-        LIMIT 1
-        """,
-        (email.strip().lower(),),
-        is_select=True
+    supabase = get_supabase()
+    result = (
+        supabase.table("usuarios")
+        .select("id, nome, email, senha_hash, cargo, cliente_id, activation_code, activation_created_at")
+        .ilike("email", email.strip().lower())
+        .limit(1)
+        .execute()
     )
-    if not resultado:
-        return None
-    return dict(resultado[0])
+    
+    return result.data[0] if result.data else None
 
 
 def definir_senha_hash(id_usuario, senha_hash):
-    return execute_query(
-        "UPDATE usuarios SET senha_hash = ?, activation_code = NULL, activation_created_at = NULL WHERE id = ?",
-        (senha_hash, id_usuario)
+    supabase = get_supabase()
+    result = (
+        supabase.table("usuarios")
+        .update({
+            "senha_hash": senha_hash,
+            "activation_code": None,
+            "activation_created_at": None
+        })
+        .eq("id", id_usuario)
+        .execute()
     )
+    
+    return len(result.data) > 0
 
 
 def listar_usuarios():
-    resultado = execute_query(
-        """
-        SELECT
-            id,
-            nome,
-            email,
-            cargo,
-            cliente_id
-        FROM usuarios
-        ORDER BY
-            CASE
-                WHEN nome IS NULL OR TRIM(nome) = '' THEN email
-                ELSE nome
-            END
-        """,
-        is_select=True
-    ) or []
-    return [dict(usuario) for usuario in resultado]
+    supabase = get_supabase()
+    result = (
+        supabase.table("usuarios")
+        .select("id, nome, email, cargo, cliente_id")
+        .order("nome", nulls_first=False)
+        .execute()
+    )
+    
+    # Se o nome for nulo, ordena por email
+    users = result.data or []
+    users.sort(key=lambda u: (u.get("nome") is None, u.get("nome") or u.get("email")))
+    
+    return users
 
 
 def atualizar_cargo_usuario(id_usuario, cargo):
-    return execute_query(
-        "UPDATE usuarios SET cargo = ? WHERE id = ?",
-        (cargo, id_usuario)
+    supabase = get_supabase()
+    result = (
+        supabase.table("usuarios")
+        .update({"cargo": cargo})
+        .eq("id", id_usuario)
+        .execute()
     )
+    
+    return len(result.data) > 0

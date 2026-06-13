@@ -1,7 +1,5 @@
 import os
-
-from criar_banco import inicializar_banco
-from migrar_banco import migrar_banco
+from dotenv import load_dotenv
 
 from flask import Flask
 
@@ -26,6 +24,9 @@ from backend.controllers.cliente_controller import (
     registrar_pagamento_controller
 )
 
+# Carrega as variáveis de ambiente
+load_dotenv()
+
 app = Flask(
     __name__,
     template_folder="frontend/templates",
@@ -33,9 +34,6 @@ app = Flask(
 )
 
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
-
-inicializar_banco()
-migrar_banco()
 
 app.before_request(exigir_login)
 

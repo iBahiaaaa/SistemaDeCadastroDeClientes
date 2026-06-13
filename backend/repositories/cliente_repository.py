@@ -1,4 +1,4 @@
-from backend.database.connection import execute_query
+from backend.database.connection import get_supabase
 from datetime import datetime, timedelta
 import secrets
 
@@ -42,7 +42,6 @@ def calcular_data_vencimento(data_referencia, periodo_plano):
         data = datetime.strptime(data_referencia, "%Y-%m-%d")
         
         if periodo_plano == "trimestral":
-            # Adiciona 3 meses
             mes = data.month + 2
             ano = data.year
             dia = data.day
@@ -55,7 +54,6 @@ def calcular_data_vencimento(data_referencia, periodo_plano):
             return nova_data.strftime("%Y-%m-%d")
             
         elif periodo_plano == "semestral":
-            # Adiciona 6 meses
             mes = data.month + 5
             ano = data.year
             dia = data.day
@@ -68,12 +66,10 @@ def calcular_data_vencimento(data_referencia, periodo_plano):
             return nova_data.strftime("%Y-%m-%d")
             
         elif periodo_plano == "anual":
-            # Adiciona 1 ano
             nova_data = datetime(data.year + 1, data.month, data.day)
             return nova_data.strftime("%Y-%m-%d")
             
-        else:  # Padrão: mensal
-            # Adiciona 1 mês
+        else:
             mes = data.month + 1
             ano = data.year
             dia = data.day
@@ -82,7 +78,6 @@ def calcular_data_vencimento(data_referencia, periodo_plano):
                 mes = 1
                 ano += 1
                 
-            # Trata casos como 31 de janeiro para fevereiro (evita erro)
             while True:
                 try:
                     nova_data = datetime(ano, mes, dia)
@@ -96,303 +91,216 @@ def calcular_data_vencimento(data_referencia, periodo_plano):
         return None
 
 
-def salvar_cliente(
-    nome,
-    email,
-    whatsapp,
-    endereco,
-    plano,
-    valor_plano,
-    data_matricula,
-    data_vencimento,
-    contato_emergencia,
-    status,
-    observacoes
-):
-    """
-    Insere um novo cliente no banco de dados.
-    """
-
-    query = """
-        INSERT INTO clientes (
-            nome,
-            email,
-            whatsapp,
-            endereco,
-            plano,
-            valor_plano,
-            data_matricula,
-            data_vencimento,
-            ultimo_pagamento,
-            contato_emergencia,
-            status,
-            observacoes
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)
-    """
-
-    params = (
-        nome,
-        email,
-        whatsapp,
-        endereco,
-        plano,
-        valor_plano,
-        data_matricula,
-        data_vencimento,
-        contato_emergencia,
-        status,
-        observacoes
+def salvar_cliente(nome, email, whatsapp, endereco, plano, valor_plano, data_matricula, data_vencimento, contato_emergencia, status, observacoes):
+    supabase = get_supabase()
+    result = (
+        supabase.table("clientes")
+        .insert({
+            "nome": nome,
+            "email": email,
+            "whatsapp": whatsapp,
+            "endereco": endereco,
+            "plano": plano,
+            "valor_plano": valor_plano,
+            "periodo_plano": plano or "mensal",
+            "data_matricula": data_matricula,
+            "data_vencimento": data_vencimento,
+            "contato_emergencia": contato_emergencia,
+            "status": status,
+            "observacoes": observacoes
+        })
+        .execute()
     )
-
-    return execute_query(query, params, return_lastrowid=True)
+    
+    return result.data[0]["id"] if result.data else None
 
 
 def buscar_clientes():
-    """
-    Retorna todos os clientes cadastrados com status calculado automaticamente.
-    """
-
-    query = """
-        SELECT
-            c.id,
-            c.nome,
-            c.email,
-            c.whatsapp,
-            c.endereco,
-            c.plano,
-            c.valor_plano,
-            c.data_matricula,
-            c.data_vencimento,
-            c.ultimo_pagamento,
-            c.contato_emergencia,
-            c.observacoes,
-            (SELECT u.activation_code FROM usuarios u WHERE u.cliente_id = c.id) AS activation_code,
-            (SELECT CASE WHEN u.senha_hash IS NOT NULL AND u.senha_hash <> '' THEN 1 ELSE 0 END FROM usuarios u WHERE u.cliente_id = c.id) AS conta_ativa
-        FROM clientes c
-        ORDER BY nome
-    """
-
-    clientes = execute_query(query, is_select=True)
-
-    if not clientes or clientes is None:
-        return []
-
-    # Calcula status automaticamente para cada cliente
-    clientes_com_status = []
-    for cliente in clientes:
-        cliente_dict = dict(cliente)  # Converte para dicionário
-        cliente_dict['status'] = calcular_status_automatico(cliente_dict['data_vencimento'])
-        clientes_com_status.append(cliente_dict)
-
-    return clientes_com_status
+    supabase = get_supabase()
+    result = (
+        supabase.table("clientes")
+        .select("*, usuarios!clientes_cliente_id_fkey(activation_code, senha_hash)")
+        .order("nome")
+        .execute()
+    )
+    
+    clientes = []
+    for cliente in result.data or []:
+        cliente_dict = dict(cliente)
+        cliente_dict["status"] = calcular_status_automatico(cliente_dict.get("data_vencimento"))
+        
+        # Ajusta os campos da conta do usuário
+        usuario = cliente_dict.pop("usuarios", [])
+        if usuario:
+            cliente_dict["activation_code"] = usuario[0].get("activation_code")
+            cliente_dict["conta_ativa"] = 1 if usuario[0].get("senha_hash") else 0
+        else:
+            cliente_dict["activation_code"] = None
+            cliente_dict["conta_ativa"] = 0
+            
+        clientes.append(cliente_dict)
+        
+    return clientes
 
 
 def buscar_cliente_por_id(id_cliente):
-    """
-    Busca um cliente pelo seu ID.
-    """
-
-    query = """
-        SELECT
-            c.id,
-            c.nome,
-            c.email,
-            c.whatsapp,
-            c.endereco,
-            c.plano,
-            c.valor_plano,
-            c.data_matricula,
-            c.data_vencimento,
-            c.ultimo_pagamento,
-            c.contato_emergencia,
-            c.observacoes,
-            (SELECT u.activation_code FROM usuarios u WHERE u.cliente_id = c.id) AS activation_code,
-            (SELECT CASE WHEN u.senha_hash IS NOT NULL AND u.senha_hash <> '' THEN 1 ELSE 0 END FROM usuarios u WHERE u.cliente_id = c.id) AS conta_ativa
-        FROM clientes c
-        WHERE c.id = ?
-    """
-
-    resultado = execute_query(query, (id_cliente,), is_select=True)
-
-    if resultado:
-        return resultado[0]
-
-    return None
+    supabase = get_supabase()
+    result = (
+        supabase.table("clientes")
+        .select("*, usuarios!clientes_cliente_id_fkey(activation_code, senha_hash)")
+        .eq("id", id_cliente)
+        .execute()
+    )
+    
+    if not result.data:
+        return None
+        
+    cliente = dict(result.data[0])
+    cliente["status"] = calcular_status_automatico(cliente.get("data_vencimento"))
+    
+    usuario = cliente.pop("usuarios", [])
+    if usuario:
+        cliente["activation_code"] = usuario[0].get("activation_code")
+        cliente["conta_ativa"] = 1 if usuario[0].get("senha_hash") else 0
+    else:
+        cliente["activation_code"] = None
+        cliente["conta_ativa"] = 0
+        
+    return cliente
 
 
 def buscar_nome_cliente_por_id(id_cliente):
-    resultado = execute_query(
-        "SELECT nome FROM clientes WHERE id = ?",
-        (id_cliente,),
-        is_select=True
+    supabase = get_supabase()
+    result = (
+        supabase.table("clientes")
+        .select("nome")
+        .eq("id", id_cliente)
+        .execute()
     )
-    if not resultado:
-        return None
-    return dict(resultado[0]).get("nome")
+    
+    return result.data[0]["nome"] if result.data else None
 
 
 def buscar_cliente_por_email(email):
     if not email:
         return None
 
-    resultado = execute_query(
-        "SELECT id, nome, email FROM clientes WHERE LOWER(email) = ? LIMIT 1",
-        (email.strip().lower(),),
-        is_select=True
+    supabase = get_supabase()
+    result = (
+        supabase.table("clientes")
+        .select("id, nome, email")
+        .ilike("email", email.strip().lower())
+        .limit(1)
+        .execute()
     )
-    if not resultado:
-        return None
-    return dict(resultado[0])
+    
+    return result.data[0] if result.data else None
 
 
-def atualizar_cliente(
-    id_cliente,
-    nome,
-    email,
-    whatsapp,
-    endereco,
-    plano,
-    valor_plano,
-    data_matricula,
-    data_vencimento,
-    contato_emergencia,
-    status,
-    observacoes
-):
-    """
-    Atualiza um cliente existente.
-    """
-
-    query = """
-        UPDATE clientes
-        SET
-            nome = ?,
-            email = ?,
-            whatsapp = ?,
-            endereco = ?,
-            plano = ?,
-            valor_plano = ?,
-            data_matricula = ?,
-            data_vencimento = ?,
-            contato_emergencia = ?,
-            status = ?,
-            observacoes = ?
-        WHERE id = ?
-    """
-
-    params = (
-        nome,
-        email,
-        whatsapp,
-        endereco,
-        plano,
-        valor_plano,
-        data_matricula,
-        data_vencimento,
-        contato_emergencia,
-        status,
-        observacoes,
-        id_cliente
+def atualizar_cliente(id_cliente, nome, email, whatsapp, endereco, plano, valor_plano, data_matricula, data_vencimento, contato_emergencia, status, observacoes):
+    supabase = get_supabase()
+    result = (
+        supabase.table("clientes")
+        .update({
+            "nome": nome,
+            "email": email,
+            "whatsapp": whatsapp,
+            "endereco": endereco,
+            "plano": plano,
+            "valor_plano": valor_plano,
+            "periodo_plano": plano or "mensal",
+            "data_matricula": data_matricula,
+            "data_vencimento": data_vencimento,
+            "contato_emergencia": contato_emergencia,
+            "status": status,
+            "observacoes": observacoes
+        })
+        .eq("id", id_cliente)
+        .execute()
     )
-
-    return execute_query(query, params)
+    
+    return len(result.data) > 0
 
 
 def excluir_cliente(id_cliente):
-    """
-    Exclui um cliente pelo ID.
-    """
-
-    query = "DELETE FROM clientes WHERE id = ?"
-
-    return execute_query(query, (id_cliente,))
+    supabase = get_supabase()
+    result = (
+        supabase.table("clientes")
+        .delete()
+        .eq("id", id_cliente)
+        .execute()
+    )
+    
+    return len(result.data) > 0
 
 
 def pesquisar_clientes(termo_pesquisa):
-    """
-    Pesquisa clientes por todos os campos.
-    """
-
-    query = """
-        SELECT
-            c.id,
-            c.nome,
-            c.email,
-            c.whatsapp,
-            c.endereco,
-            c.plano,
-            c.valor_plano,
-            c.data_matricula,
-            c.data_vencimento,
-            c.ultimo_pagamento,
-            c.contato_emergencia,
-            c.observacoes,
-            (SELECT u.activation_code FROM usuarios u WHERE u.cliente_id = c.id) AS activation_code,
-            (SELECT CASE WHEN u.senha_hash IS NOT NULL AND u.senha_hash <> '' THEN 1 ELSE 0 END FROM usuarios u WHERE u.cliente_id = c.id) AS conta_ativa
-        FROM clientes c
-        WHERE 
-            c.nome LIKE ? OR
-            c.email LIKE ? OR
-            c.whatsapp LIKE ? OR
-            c.endereco LIKE ? OR
-            c.plano LIKE ? OR
-            c.valor_plano LIKE ? OR
-            c.data_matricula LIKE ? OR
-            c.data_vencimento LIKE ? OR
-            c.contato_emergencia LIKE ? OR
-            c.observacoes LIKE ?
-        ORDER BY nome
-    """
-
-    termo = f"%{termo_pesquisa}%"
-    params = (termo, termo, termo, termo, termo, termo, termo, termo, termo, termo)
-
-    clientes = execute_query(query, params, is_select=True)
-
-    if not clientes or clientes is None:
-        return []
-
-    # Calcula status automaticamente para cada cliente
-    clientes_com_status = []
-    for cliente in clientes:
-        cliente_dict = dict(cliente)  # Converte para dicionário
-        cliente_dict['status'] = calcular_status_automatico(cliente_dict['data_vencimento'])
-        clientes_com_status.append(cliente_dict)
-
-    return clientes_com_status
+    supabase = get_supabase()
+    
+    # Supabase não suporta OR com LIKE diretamente em um único query facilmente,
+    # então vamos usar .or() com os campos
+    result = (
+        supabase.table("clientes")
+        .select("*, usuarios!clientes_cliente_id_fkey(activation_code, senha_hash)")
+        .or_(
+            f"nome.ilike.%{termo_pesquisa}%,"
+            f"email.ilike.%{termo_pesquisa}%,"
+            f"whatsapp.ilike.%{termo_pesquisa}%,"
+            f"endereco.ilike.%{termo_pesquisa}%,"
+            f"plano.ilike.%{termo_pesquisa}%,"
+            f"valor_plano.ilike.%{termo_pesquisa}%,"
+            f"data_matricula.ilike.%{termo_pesquisa}%,"
+            f"data_vencimento.ilike.%{termo_pesquisa}%,"
+            f"contato_emergencia.ilike.%{termo_pesquisa}%,"
+            f"observacoes.ilike.%{termo_pesquisa}%"
+        )
+        .order("nome")
+        .execute()
+    )
+    
+    clientes = []
+    for cliente in result.data or []:
+        cliente_dict = dict(cliente)
+        cliente_dict["status"] = calcular_status_automatico(cliente_dict.get("data_vencimento"))
+        
+        usuario = cliente_dict.pop("usuarios", [])
+        if usuario:
+            cliente_dict["activation_code"] = usuario[0].get("activation_code")
+            cliente_dict["conta_ativa"] = 1 if usuario[0].get("senha_hash") else 0
+        else:
+            cliente_dict["activation_code"] = None
+            cliente_dict["conta_ativa"] = 0
+            
+        clientes.append(cliente_dict)
+        
+    return clientes
 
 
 def registrar_pagamento(id_cliente):
-    """
-    Registra um pagamento:
-    1. Salva a data de vencimento atual em ultimo_pagamento
-    2. Calcula a nova data de vencimento usando ultimo_pagamento como base
-    """
     cliente = buscar_cliente_por_id(id_cliente)
     if not cliente:
         return False
         
-    cliente_dict = dict(cliente)
-    data_vencimento_atual = cliente_dict.get('data_vencimento')
-    plano = cliente_dict.get('plano', 'mensal')
+    data_vencimento_atual = cliente.get("data_vencimento")
+    plano = cliente.get("plano", "mensal")
     
     if data_vencimento_atual:
-        # Calcula a nova data de vencimento
         nova_data_vencimento = calcular_data_vencimento(data_vencimento_atual, plano)
         
         if nova_data_vencimento:
-            query = """
-                UPDATE clientes
-                SET
-                    ultimo_pagamento = ?,
-                    data_vencimento = ?,
-                    status = 'Pago'
-                WHERE id = ?
-            """
+            supabase = get_supabase()
+            result = (
+                supabase.table("clientes")
+                .update({
+                    "ultimo_pagamento": data_vencimento_atual,
+                    "data_vencimento": nova_data_vencimento,
+                    "status": "Pago"
+                })
+                .eq("id", id_cliente)
+                .execute()
+            )
             
-            params = (data_vencimento_atual, nova_data_vencimento, id_cliente)
-            return execute_query(query, params)
+            return len(result.data) > 0
     
     return False
 
@@ -402,20 +310,15 @@ def email_em_uso_em_outro_cliente(email, id_cliente=None):
         return False
 
     email = email.strip().lower()
+    supabase = get_supabase()
+    
+    query = supabase.table("clientes").select("id").ilike("email", email)
     if id_cliente:
-        resultado = execute_query(
-            "SELECT id FROM clientes WHERE LOWER(email) = ? AND id <> ? LIMIT 1",
-            (email, id_cliente),
-            is_select=True
-        )
-    else:
-        resultado = execute_query(
-            "SELECT id FROM clientes WHERE LOWER(email) = ? LIMIT 1",
-            (email,),
-            is_select=True
-        )
-
-    return bool(resultado)
+        query = query.neq("id", id_cliente)
+    
+    result = query.limit(1).execute()
+    
+    return len(result.data) > 0
 
 
 def email_em_uso_em_usuario(email, cliente_id=None):
@@ -423,20 +326,15 @@ def email_em_uso_em_usuario(email, cliente_id=None):
         return False
 
     email = email.strip().lower()
+    supabase = get_supabase()
+    
+    query = supabase.table("usuarios").select("id").ilike("email", email)
     if cliente_id:
-        resultado = execute_query(
-            "SELECT id FROM usuarios WHERE LOWER(email) = ? AND (cliente_id IS NULL OR cliente_id <> ?) LIMIT 1",
-            (email, cliente_id),
-            is_select=True
-        )
-    else:
-        resultado = execute_query(
-            "SELECT id FROM usuarios WHERE LOWER(email) = ? LIMIT 1",
-            (email,),
-            is_select=True
-        )
-
-    return bool(resultado)
+        query = query.or_(f"cliente_id.is.null,cliente_id.neq.{cliente_id}")
+    
+    result = query.limit(1).execute()
+    
+    return len(result.data) > 0
 
 
 def garantir_conta_aluno(cliente_id, email):
@@ -444,34 +342,44 @@ def garantir_conta_aluno(cliente_id, email):
         return True
 
     email = email.strip().lower()
-
-    existente = execute_query(
-        "SELECT id, email, senha_hash FROM usuarios WHERE cliente_id = ? LIMIT 1",
-        (cliente_id,),
-        is_select=True
+    supabase = get_supabase()
+    
+    # Verifica se já existe usuário vinculado a esse cliente
+    result = (
+        supabase.table("usuarios")
+        .select("id, email, senha_hash")
+        .eq("cliente_id", cliente_id)
+        .limit(1)
+        .execute()
     )
-
-    if existente:
-        usuario = dict(existente[0])
+    
+    if result.data:
+        usuario = result.data[0]
         if (usuario.get("email") or "").strip().lower() != email:
             if email_em_uso_em_usuario(email, cliente_id=cliente_id):
                 return None
-            return execute_query(
-                "UPDATE usuarios SET email = ? WHERE id = ?",
-                (email, usuario["id"])
-            )
+            # Atualiza o email do usuário
+            supabase.table("usuarios").update({"email": email}).eq("id", usuario["id"]).execute()
         return True
-
+    
+    # Cria novo usuário
     if email_em_uso_em_usuario(email):
         return None
-
+        
     codigo = secrets.token_urlsafe(6)
     criado_em = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    return execute_query(
-        """
-        INSERT INTO usuarios (email, senha_hash, cargo, cliente_id, activation_code, activation_created_at)
-        VALUES (?, NULL, 'ALUNO', ?, ?, ?)
-        """,
-        (email, cliente_id, codigo, criado_em)
+    
+    result = (
+        supabase.table("usuarios")
+        .insert({
+            "email": email,
+            "senha_hash": None,
+            "cargo": "ALUNO",
+            "cliente_id": cliente_id,
+            "activation_code": codigo,
+            "activation_created_at": criado_em
+        })
+        .execute()
     )
+    
+    return len(result.data) > 0
