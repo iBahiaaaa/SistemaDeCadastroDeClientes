@@ -6,8 +6,8 @@ from supabase import create_client, Client
 load_dotenv()
 
 # Configuração do Supabase
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+SUPABASE_URL = os.environ.get("SUPABASE_URL=https://uwjcimdpdnlriquuzreo.supabase.co")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY=sb_publishable_QLzB0eIRDWULsDzvPooO_A_We6GqI_h")
 
 def get_supabase() -> Client:
     """
