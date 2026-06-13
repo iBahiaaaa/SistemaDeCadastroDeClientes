@@ -1,0 +1,23 @@
+<section id="barraLateral">
+    <div>
+        <a class="sidebar-link" {% if request.path == '/' %}id="paginaAtual"{% endif %} href="/">
+            <img src="{{ url_for('static', filename='imagens/group.svg') }}" alt="Clientes">
+            Clientes
+        </a>
+        <h1><img src="{{ url_for('static', filename='imagens/card.svg') }}" alt="Planos">Planos</h1>
+        <h1><img src="{{ url_for('static', filename='imagens/money.svg') }}" alt="Pagamentos">Pagamentos</h1>
+        <h1><img src="{{ url_for('static', filename='imagens/warning.svg') }}" alt="Inadimplência">Inadimplência</h1>
+        <a class="sidebar-link" {% if request.path == '/treinos' %}id="paginaAtual"{% endif %} href="/treinos">
+            <img src="{{ url_for('static', filename='imagens/halter.svg') }}" alt="Treinos">
+            Treinos
+        </a>
+        <h1><img src="{{ url_for('static', filename='imagens/prancheta.svg') }}" alt="Avaliação">Avaliação</h1>
+        <h1><img src="{{ url_for('static', filename='imagens/personCheck.svg') }}" alt="Frequência">Frequência</h1>
+        <a class="sidebar-link" {% if request.path == '/funcionarios' %}id="paginaAtual"{% endif %} href="/funcionarios">
+            <img src="{{ url_for('static', filename='imagens/work.svg') }}" alt="Funcionários">
+            Funcionários
+        </a>
+        <h1><img src="{{ url_for('static', filename='imagens/relatorios.svg') }}" alt="Relatórios">Relatórios</h1>
+        <h1><img src="{{ url_for('static', filename='imagens/settings.svg') }}" alt="Configuração">Configuração</h1>
+    </div>
+</section>

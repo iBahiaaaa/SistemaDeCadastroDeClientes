@@ -1,6 +1,5 @@
-from flask import render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for
 
-from backend.services.auth_service import obter_primeiro_nome_para_header
 from backend.services.usuario_service import (
     listar_usuarios_com_exibicao,
     alterar_cargo_usuario
@@ -13,7 +12,6 @@ def pagina_funcionarios():
 
     return render_template(
         "funcionarios.html",
-        usuario_nome=obter_primeiro_nome_para_header(session),
         usuarios=listar_usuarios_com_exibicao(),
         cargos=["ADM", "FUNCIONARIO", "INSTRUTOR", "FINANCEIRO", "ALUNO"],
         mensagem=mensagem,

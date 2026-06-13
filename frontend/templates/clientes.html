@@ -12,38 +12,9 @@
 </head>
 
 <body>
-    <header>
-        <section id="cabeca">
-            <div id="cabecaDireita">
-                <div class="usuarioMenu">
-                    <button class="usuarioMenu-botao" type="button">
-                        Olá, {{ usuario_nome or 'Usuário' }}
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </button>
-                    <div class="usuarioMenu-dropdown">
-                        <a class="usuarioMenu-item" href="/perfil">Meu Perfil</a>
-                        <a class="usuarioMenu-item usuarioMenu-sair" id="usuarioMenu-sair" href="/logout">Sair / Deslogar</a>
-                    </div>
-                </div>
-                {% include 'components/theme_toggle.html' %}
-            </div>
-        </section>
-    </header>
+    {% include 'components/header.html' %}
     <main>
-        <section id="barraLateral">
-            <div>
-                <a class="sidebar-link" id="paginaAtual" href="/"><img src="../static/imagens/group.svg" alt="Clientes">Clientes</a>
-                <h1><img src="../static/imagens/card.svg" alt="Planos">Planos</h1>
-                <h1><img src="../static/imagens/money.svg" alt="Pagamentos">Pagamentos</h1>
-                <h1><img src="../static/imagens/warning.svg" alt="Inadimplência">Inadimplência</h1>
-                <h1><img src="../static/imagens/halter.svg" alt="Treinos">Treinos</h1>
-                <h1><img src="../static/imagens/prancheta.svg" alt="Avaliação">Avaliação</h1>
-                <h1><img src="../static/imagens/personCheck.svg" alt="Frequência">Frequência</h1>
-                <a class="sidebar-link" href="/funcionarios"><img src="../static/imagens/work.svg" alt="Funcionários">Funcionários</a>
-                <h1><img src="../static/imagens/relatorios.svg" alt="Relatórios">Relatórios</h1>
-                <h1><img src="../static/imagens/settings.svg" alt="Configuração">Configuração</h1>
-            </div>
-        </section>
+        {% include 'components/sidebar.html' %}
         <section id="conteudoGeral">
             <section id="cadastroClientes">
                 <div id="divTituloListaClientes">
@@ -155,6 +126,7 @@
     </form>
     <section id="overlayModal">
     </section>
+    <script src="{{ url_for('static', filename='js/components/theme-toggle.js') }}"></script>
     <script src="{{ url_for('static', filename='js/clientes.js') }}"></script>
     <script id="clientes-data" type="application/json">
     {{ clientes | tojson | safe }}
