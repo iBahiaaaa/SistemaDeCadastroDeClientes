@@ -1,12 +1,14 @@
 /* From Uiverse.io by rishichawda */
 #theme-toggle-button {
-  position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 56px;
   height: 36px;
   cursor: pointer;
+  position: relative;
   right: 30px;
-  top: -30px;
+  top: -5px;
 }
 
 #theme-toggle-button svg {
