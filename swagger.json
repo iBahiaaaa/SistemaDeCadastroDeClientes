@@ -1,0 +1,305 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Sistema de Cadastro de Clientes - API",
+    "version": "1.0.0",
+    "description": "API para gerenciamento de clientes, treinos e usuários do sistema de academia"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Servidor local de desenvolvimento"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Página inicial - Lista de clientes",
+        "tags": ["Páginas"],
+        "responses": {
+          "200": {
+            "description": "Página HTML com lista de clientes"
+          }
+        }
+      }
+    },
+    "/treinos": {
+      "get": {
+        "summary": "Página de treinos",
+        "tags": ["Páginas"],
+        "responses": {
+          "200": {
+            "description": "Página HTML de gerenciamento de treinos"
+          }
+        }
+      }
+    },
+    "/funcionarios": {
+      "get": {
+        "summary": "Página de funcionários",
+        "tags": ["Páginas"],
+        "responses": {
+          "200": {
+            "description": "Página HTML de gerenciamento de funcionários"
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "summary": "Página de login",
+        "tags": ["Autenticação"],
+        "responses": {
+          "200": {
+            "description": "Página HTML de login"
+          }
+        }
+      },
+      "post": {
+        "summary": "Realizar login",
+        "tags": ["Autenticação"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "senha": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "senha"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redireciona para a página inicial em caso de sucesso, ou volta para login em caso de erro"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "summary": "Realizar logout",
+        "tags": ["Autenticação"],
+        "responses": {
+          "302": {
+            "description": "Redireciona para a página de login"
+          }
+        }
+      }
+    },
+    "/cadastrar": {
+      "post": {
+        "summary": "Cadastrar novo cliente",
+        "tags": ["Clientes"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "whatsapp": { "type": "string" },
+                  "endereco": { "type": "string" },
+                  "contato_emergencia": { "type": "string" },
+                  "plano": { "type": "string" },
+                  "valor_plano": { "type": "string" },
+                  "data_matricula": { "type": "string", "format": "date" },
+                  "data_vencimento": { "type": "string", "format": "date" },
+                  "status": { "type": "string" },
+                  "observacoes": { "type": "string" }
+                },
+                "required": ["nome"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redireciona para a página inicial"
+          }
+        }
+      }
+    },
+    "/pesquisar": {
+      "get": {
+        "summary": "Pesquisar clientes",
+        "tags": ["Clientes"],
+        "parameters": [
+          {
+            "name": "termo",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Termo de busca (nome, email, whatsapp, etc.)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de clientes encontrados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/excluir/{id_cliente}": {
+      "post": {
+        "summary": "Excluir cliente",
+        "tags": ["Clientes"],
+        "parameters": [
+          {
+            "name": "id_cliente",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redireciona para a página inicial"
+          }
+        }
+      }
+    },
+    "/registrar-pagamento/{id_cliente}": {
+      "post": {
+        "summary": "Registrar pagamento de cliente",
+        "tags": ["Clientes"],
+        "parameters": [
+          {
+            "name": "id_cliente",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redireciona para a página inicial"
+          }
+        }
+      }
+    },
+    "/funcionarios/{id_usuario}/cargo": {
+      "post": {
+        "summary": "Atualizar cargo de usuário",
+        "tags": ["Funcionários"],
+        "parameters": [
+          {
+            "name": "id_usuario",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cargo": { "type": "string" }
+                },
+                "required": ["cargo"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redireciona para a página de funcionários"
+          }
+        }
+      }
+    },
+    "/treinos/gerar": {
+      "post": {
+        "summary": "Gerar treino para cliente",
+        "tags": ["Treinos"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cliente_id": { "type": "integer" },
+                  "nivel_experiencia": { "type": "string", "enum": ["iniciante", "intermediario", "avancado"] },
+                  "tem_lesao": { "type": "string", "enum": ["true", "false"] },
+                  "local_lesao": { "type": "string" }
+                },
+                "required": ["cliente_id", "nivel_experiencia"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Treino gerado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Cliente não encontrado"
+          }
+        }
+      }
+    },
+    "/treinos/cliente/{cliente_id}": {
+      "get": {
+        "summary": "Listar treinos de um cliente",
+        "tags": ["Treinos"],
+        "parameters": [
+          {
+            "name": "cliente_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de treinos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object" }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cliente não encontrado"
+          }
+        }
+      }
+    }
+  }
+}

@@ -19,7 +19,7 @@ def autenticar(email, senha):
 
     usuario = buscar_usuario_por_email(email)
     if not usuario:
-        return {"status": "erro", "erro": "Email não cadastrado."}
+        return {"status": "erro", "erro": "Email ou senha inválidos."}
 
     if not usuario.get("senha_hash"):
         return {"status": "ativar", "email": email}
@@ -62,7 +62,7 @@ def ativar_conta(email, codigo, senha, confirmar_senha):
 
     usuario = buscar_usuario_por_email(email)
     if not usuario:
-        return {"status": "erro", "erro": "Email não cadastrado.", "email": email}
+        return {"status": "erro", "erro": "Email ou senha inválidos.", "email": email}
 
     if usuario.get("senha_hash"):
         return {"status": "ja_ativo"}

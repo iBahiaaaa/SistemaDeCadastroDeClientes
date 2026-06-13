@@ -249,6 +249,105 @@ main {
     color: var(--textoSuave);
 }
 
+/* Novos estilos */
+.resultados-pesquisa {
+    margin-top: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.resultado-pesquisa-item {
+    padding: 12px;
+    background-color: var(--cor1);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.resultado-pesquisa-item:hover {
+    background-color: var(--cor4);
+}
+
+.resultado-pesquisa-item h4 {
+    margin: 0 0 4px 0;
+}
+
+.resultado-pesquisa-item p {
+    margin: 0;
+    color: var(--textoSuave);
+    font-size: 0.9em;
+}
+
+.form-treino {
+    background-color: var(--cor2);
+    border: 1px solid var(--bordaSuave);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.form-treino h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-decoration: underline var(--cor4);
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--texto);
+    font-weight: bold;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--cor1);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    color: var(--texto);
+    font-size: 1em;
+}
+
+.botoes-form {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.listaTreinos {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.listaTreinos h3 {
+    margin: 0;
+    color: var(--texto);
+}
+
+.exercicio-item {
+    background-color: var(--cor1);
+    border: 1px solid var(--bordaSuave);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.exercicio-item h4 {
+    margin: 0 0 8px 0;
+    color: var(--cor4);
+}
+
+.exercicio-item p {
+    margin: 4px 0;
+    color: var(--texto);
+}
+
 @media (max-width: 768px) {
     #cabeca {
         height: 60px !important;

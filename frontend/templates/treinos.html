@@ -22,48 +22,75 @@
                 </div>
             </section>
 
+            <!-- Pesquisa de aluno -->
             <section class="pesquisaAluno">
-                <input type="text" id="pesquisaAluno" placeholder="Pesquisar aluno...">
+                <input type="text" id="pesquisaAluno" placeholder="Pesquisar aluno por nome, email ou WhatsApp...">
+                <div id="resultadosPesquisa" class="resultados-pesquisa"></div>
             </section>
 
-            <section class="cardAluno">
+            <!-- Card do aluno selecionado -->
+            <section class="cardAluno" id="cardAlunoSelecionado" style="display: none;">
                 <div class="cardAlunoCabecalho">
                     <div>
-                        <h2>João Silva</h2>
-                        <span>Hipertrofia • Intermediário • 5x Semana</span>
+                        <h2 id="nomeAlunoSelecionado"></h2>
+                        <span id="infoAlunoSelecionado"></span>
                     </div>
                     <div class="acoesAluno">
-                        <button class="btnGerar">Gerar Treino</button>
-                        <button class="btnEditar">Editar</button>
+                        <button class="btnGerar" id="btnAbrirModalGerar">Gerar Novo Treino</button>
+                        <button class="btnEditar" id="btnVerTreinos">Ver Treinos</button>
                     </div>
                 </div>
             </section>
 
-            <section class="listaTreinos">
-                <article class="cardTreino">
-                    <h3>Treino A</h3>
-                    <span>Peito e Tríceps</span>
-                    <p>5 exercícios</p>
-                </article>
-                <article class="cardTreino">
-                    <h3>Treino B</h3>
-                    <span>Costas e Bíceps</span>
-                    <p>5 exercícios</p>
-                </article>
-                <article class="cardTreino">
-                    <h3>Treino C</h3>
-                    <span>Pernas</span>
-                    <p>6 exercícios</p>
-                </article>
-                <article class="cardTreino">
-                    <h3>Treino D</h3>
-                    <span>Ombros</span>
-                    <p>4 exercícios</p>
-                </article>
+            <!-- Formulário para gerar treino -->
+            <section id="formGerarTreino" style="display: none;">
+                <div class="form-treino">
+                    <h3>Gerar Treino Personalizado</h3>
+                    <div class="form-group">
+                        <label for="nivelExperiencia">Nível de Experiência:</label>
+                        <select id="nivelExperiencia">
+                            <option value="iniciante">Iniciante</option>
+                            <option value="intermediario">Intermediário</option>
+                            <option value="avancado">Avançado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="temLesao">Tem alguma lesão?</label>
+                        <select id="temLesao">
+                            <option value="false">Não</option>
+                            <option value="true">Sim</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="campoLocalLesao" style="display: none;">
+                        <label for="localLesao">Local da Lesão:</label>
+                        <select id="localLesao">
+                            <option value="">Selecione...</option>
+                            <option value="ombro">Ombro</option>
+                            <option value="joelho">Joelho</option>
+                            <option value="punho">Punho</option>
+                            <option value="cotovelo">Cotovelo</option>
+                            <option value="coluna">Coluna</option>
+                            <option value="lombar">Lombar</option>
+                            <option value="tornozelo">Tornozelo</option>
+                            <option value="quadril">Quadril</option>
+                        </select>
+                    </div>
+                    <div class="botoes-form">
+                        <button id="btnCancelarGerar" class="btnEditar">Cancelar</button>
+                        <button id="btnConfirmarGerar" class="btnGerar">Gerar Treino</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Lista de treinos do aluno -->
+            <section class="listaTreinos" id="listaTreinos" style="display: none;">
+                <h3 id="tituloTreinos">Treinos do Aluno</h3>
+                <div id="cardsTreinos"></div>
             </section>
         </section>
     </main>
     <script src="{{ url_for('static', filename='js/components/theme-toggle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/treinos.js') }}"></script>
 </body>
 
 </html>

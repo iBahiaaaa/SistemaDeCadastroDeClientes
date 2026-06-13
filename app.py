@@ -18,6 +18,10 @@ from backend.controllers.pagina_controller import (
     perfil,
     pagina_treinos
 )
+from backend.controllers.treino_controller import (
+    gerar_treino,
+    listar_treinos_cliente
+)
 from backend.controllers.cliente_controller import (
     cadastrar_cliente,
     deletar_cliente,
@@ -25,6 +29,7 @@ from backend.controllers.cliente_controller import (
     registrar_pagamento_controller
 )
 from backend.services.auth_service import obter_primeiro_nome_para_header
+from flask_swagger_ui import get_swaggerui_blueprint
 
 # Carrega as variáveis de ambiente
 load_dotenv()
@@ -37,6 +42,29 @@ app = Flask(
 
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
+# Configuração do Swagger UI
+SWAGGER_URL = '/swagger'
+API_URL = '/swagger.json'
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Sistema de Cadastro de Clientes"
+    }
+)
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+
+# Adiciona rota para servir o arquivo swagger.json
+def exempt_from_login(func):
+    func._exempt_from_login = True
+    return func
+
+@app.route('/swagger.json')
+@exempt_from_login
+def serve_swagger_json():
+    from flask import send_from_directory
+    return send_from_directory('.', 'swagger.json')
+
 app.before_request(exigir_login)
 
 @app.context_processor
@@ -48,6 +76,8 @@ app.add_url_rule("/", view_func=inicio, methods=["GET"])
 app.add_url_rule("/perfil", view_func=perfil, methods=["GET"])
 app.add_url_rule("/funcionarios", view_func=pagina_funcionarios, methods=["GET"])
 app.add_url_rule("/treinos", view_func=pagina_treinos, methods=["GET"])
+app.add_url_rule("/treinos/gerar", view_func=gerar_treino, methods=["POST"])
+app.add_url_rule("/treinos/cliente/<int:cliente_id>", view_func=listar_treinos_cliente, methods=["GET"])
 
 app.add_url_rule("/login", view_func=login, methods=["GET", "POST"])
 app.add_url_rule("/logout", view_func=logout, methods=["GET"])
