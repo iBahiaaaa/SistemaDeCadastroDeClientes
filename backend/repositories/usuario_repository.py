@@ -40,7 +40,7 @@ def listar_usuarios():
     result = (
         supabase.table("usuarios")
         .select("id, nome, email, cargo, cliente_id")
-        .order("nome", nulls_first=False)
+        .order("nome", nullsfirst=False)
         .execute()
     )
     

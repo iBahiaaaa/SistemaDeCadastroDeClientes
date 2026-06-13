@@ -1,6 +1,21 @@
 from backend.database.connection import get_supabase
 from datetime import datetime, timedelta
 import secrets
+import re
+
+
+def limpar_valor_monetario(valor):
+    if not valor:
+        return None
+    valor_str = str(valor).strip()
+    # Remove R$, espaços, pontos de milhar
+    valor_limpo = re.sub(r'[R$\s.]', '', valor_str)
+    # Troca vírgula por ponto
+    valor_limpo = valor_limpo.replace(',', '.')
+    try:
+        return float(valor_limpo)
+    except ValueError:
+        return None
 
 
 def calcular_status_automatico(data_vencimento):
@@ -92,6 +107,9 @@ def calcular_data_vencimento(data_referencia, periodo_plano):
 
 
 def salvar_cliente(nome, email, whatsapp, endereco, plano, valor_plano, data_matricula, data_vencimento, contato_emergencia, status, observacoes):
+    # Limpa e converte o valor monetário
+    valor_plano_convertido = limpar_valor_monetario(valor_plano)
+    
     supabase = get_supabase()
     result = (
         supabase.table("clientes")
@@ -101,7 +119,7 @@ def salvar_cliente(nome, email, whatsapp, endereco, plano, valor_plano, data_mat
             "whatsapp": whatsapp,
             "endereco": endereco,
             "plano": plano,
-            "valor_plano": valor_plano,
+            "valor_plano": valor_plano_convertido,
             "periodo_plano": plano or "mensal",
             "data_matricula": data_matricula,
             "data_vencimento": data_vencimento,
@@ -117,9 +135,10 @@ def salvar_cliente(nome, email, whatsapp, endereco, plano, valor_plano, data_mat
 
 def buscar_clientes():
     supabase = get_supabase()
+    # Primeiro busca só os clientes
     result = (
         supabase.table("clientes")
-        .select("*, usuarios!clientes_cliente_id_fkey(activation_code, senha_hash)")
+        .select("*")
         .order("nome")
         .execute()
     )
@@ -129,11 +148,21 @@ def buscar_clientes():
         cliente_dict = dict(cliente)
         cliente_dict["status"] = calcular_status_automatico(cliente_dict.get("data_vencimento"))
         
-        # Ajusta os campos da conta do usuário
-        usuario = cliente_dict.pop("usuarios", [])
-        if usuario:
-            cliente_dict["activation_code"] = usuario[0].get("activation_code")
-            cliente_dict["conta_ativa"] = 1 if usuario[0].get("senha_hash") else 0
+        # Busca o usuário relacionado separadamente
+        if cliente_dict.get("id"):
+            usuario_result = (
+                supabase.table("usuarios")
+                .select("activation_code, senha_hash")
+                .eq("cliente_id", cliente_dict["id"])
+                .limit(1)
+                .execute()
+            )
+            if usuario_result.data:
+                cliente_dict["activation_code"] = usuario_result.data[0].get("activation_code")
+                cliente_dict["conta_ativa"] = 1 if usuario_result.data[0].get("senha_hash") else 0
+            else:
+                cliente_dict["activation_code"] = None
+                cliente_dict["conta_ativa"] = 0
         else:
             cliente_dict["activation_code"] = None
             cliente_dict["conta_ativa"] = 0
@@ -147,7 +176,7 @@ def buscar_cliente_por_id(id_cliente):
     supabase = get_supabase()
     result = (
         supabase.table("clientes")
-        .select("*, usuarios!clientes_cliente_id_fkey(activation_code, senha_hash)")
+        .select("*")
         .eq("id", id_cliente)
         .execute()
     )
@@ -158,10 +187,17 @@ def buscar_cliente_por_id(id_cliente):
     cliente = dict(result.data[0])
     cliente["status"] = calcular_status_automatico(cliente.get("data_vencimento"))
     
-    usuario = cliente.pop("usuarios", [])
-    if usuario:
-        cliente["activation_code"] = usuario[0].get("activation_code")
-        cliente["conta_ativa"] = 1 if usuario[0].get("senha_hash") else 0
+    # Busca o usuário relacionado separadamente
+    usuario_result = (
+        supabase.table("usuarios")
+        .select("activation_code, senha_hash")
+        .eq("cliente_id", cliente["id"])
+        .limit(1)
+        .execute()
+    )
+    if usuario_result.data:
+        cliente["activation_code"] = usuario_result.data[0].get("activation_code")
+        cliente["conta_ativa"] = 1 if usuario_result.data[0].get("senha_hash") else 0
     else:
         cliente["activation_code"] = None
         cliente["conta_ativa"] = 0
@@ -198,6 +234,9 @@ def buscar_cliente_por_email(email):
 
 
 def atualizar_cliente(id_cliente, nome, email, whatsapp, endereco, plano, valor_plano, data_matricula, data_vencimento, contato_emergencia, status, observacoes):
+    # Limpa e converte o valor monetário
+    valor_plano_convertido = limpar_valor_monetario(valor_plano)
+    
     supabase = get_supabase()
     result = (
         supabase.table("clientes")
@@ -207,7 +246,7 @@ def atualizar_cliente(id_cliente, nome, email, whatsapp, endereco, plano, valor_
             "whatsapp": whatsapp,
             "endereco": endereco,
             "plano": plano,
-            "valor_plano": valor_plano,
+            "valor_plano": valor_plano_convertido,
             "periodo_plano": plano or "mensal",
             "data_matricula": data_matricula,
             "data_vencimento": data_vencimento,
@@ -237,22 +276,12 @@ def excluir_cliente(id_cliente):
 def pesquisar_clientes(termo_pesquisa):
     supabase = get_supabase()
     
-    # Supabase não suporta OR com LIKE diretamente em um único query facilmente,
-    # então vamos usar .or() com os campos
+    # Busca clientes com o termo
     result = (
         supabase.table("clientes")
-        .select("*, usuarios!clientes_cliente_id_fkey(activation_code, senha_hash)")
+        .select("*")
         .or_(
-            f"nome.ilike.%{termo_pesquisa}%,"
-            f"email.ilike.%{termo_pesquisa}%,"
-            f"whatsapp.ilike.%{termo_pesquisa}%,"
-            f"endereco.ilike.%{termo_pesquisa}%,"
-            f"plano.ilike.%{termo_pesquisa}%,"
-            f"valor_plano.ilike.%{termo_pesquisa}%,"
-            f"data_matricula.ilike.%{termo_pesquisa}%,"
-            f"data_vencimento.ilike.%{termo_pesquisa}%,"
-            f"contato_emergencia.ilike.%{termo_pesquisa}%,"
-            f"observacoes.ilike.%{termo_pesquisa}%"
+            f"nome.ilike.%{termo_pesquisa}%,email.ilike.%{termo_pesquisa}%,whatsapp.ilike.%{termo_pesquisa}%,endereco.ilike.%{termo_pesquisa}%,plano.ilike.%{termo_pesquisa}%,valor_plano.ilike.%{termo_pesquisa}%,data_matricula.ilike.%{termo_pesquisa}%,data_vencimento.ilike.%{termo_pesquisa}%,contato_emergencia.ilike.%{termo_pesquisa}%,observacoes.ilike.%{termo_pesquisa}%"
         )
         .order("nome")
         .execute()
@@ -263,10 +292,21 @@ def pesquisar_clientes(termo_pesquisa):
         cliente_dict = dict(cliente)
         cliente_dict["status"] = calcular_status_automatico(cliente_dict.get("data_vencimento"))
         
-        usuario = cliente_dict.pop("usuarios", [])
-        if usuario:
-            cliente_dict["activation_code"] = usuario[0].get("activation_code")
-            cliente_dict["conta_ativa"] = 1 if usuario[0].get("senha_hash") else 0
+        # Busca o usuário relacionado separadamente
+        if cliente_dict.get("id"):
+            usuario_result = (
+                supabase.table("usuarios")
+                .select("activation_code, senha_hash")
+                .eq("cliente_id", cliente_dict["id"])
+                .limit(1)
+                .execute()
+            )
+            if usuario_result.data:
+                cliente_dict["activation_code"] = usuario_result.data[0].get("activation_code")
+                cliente_dict["conta_ativa"] = 1 if usuario_result.data[0].get("senha_hash") else 0
+            else:
+                cliente_dict["activation_code"] = None
+                cliente_dict["conta_ativa"] = 0
         else:
             cliente_dict["activation_code"] = None
             cliente_dict["conta_ativa"] = 0
