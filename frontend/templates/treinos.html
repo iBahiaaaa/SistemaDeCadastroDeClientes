@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/treinos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme_toggle.css') }}">
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+    <main>
+        {% include 'components/sidebar.html' %}
+
+        <section id="conteudoGeral">
+            <section class="topoPagina">
+                <div>
+                    <h1>Treinos</h1>
+                </div>
+            </section>
+
+            <div id="conteudoTreinos">
+                <!-- Lista de clientes na esquerda -->
+                <section id="conteudoLista">
+                    <div class="pesquisaAluno">
+                        <input type="text" id="pesquisaAluno" placeholder="Pesquisar aluno por nome, email ou WhatsApp...">
+                    </div>
+                    <div id="conteudoTabelaListaClientes">
+                        <table id="tabelaListaClientes">
+                            <thead id="cabecaTabelaClientes">
+                                <tr>
+                                    <th id="colNome">Aluno</th>
+                                    <th id="colPlano">Plano</th>
+                                    <th id="colStatus">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyTabelaListaClientes">
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Detalhes do aluno na direita -->
+                <section id="secaoNova">
+                    <div id="nenhumAluno">
+                        <i class="fa-solid fa-user"></i>
+                        <p>Selecione um aluno na lista para ver os treinos</p>
+                    </div>
+                    <div id="alunoSelecionado">
+                        <h2 id="nomeAlunoSelecionado"></h2>
+                        <div class="infoAluno">
+                            <p><strong>Plano:</strong> <span id="alunoPlano"></span></p>
+                            <p><strong>Status:</strong> <span id="alunoStatus" class="status"></span></p>
+                        </div>
+                        <div class="acoesAluno">
+                            <button class="btnGerar" id="btnAbrirModalGerar">
+                                <i class="fa-solid fa-plus"></i> Gerar Novo Treino
+                            </button>
+                            <button class="btnEditar" id="btnVerTreinos">
+                                <i class="fa-solid fa-list"></i> Ver Treinos
+                            </button>
+                        </div>
+
+                        <!-- Formulário para gerar treino -->
+        <div id="formGerarTreino">
+            <div class="form-treino">
+                <h3>Gerar Treino Personalizado</h3>
+                <div class="form-group">
+                    <label for="numDias">Quantos dias por semana na academia?</label>
+                    <select id="numDias">
+                        <option value="1">1 dia</option>
+                        <option value="2">2 dias</option>
+                        <option value="3">3 dias</option>
+                        <option value="4">4 dias</option>
+                        <option value="5">5 dias</option>
+                        <option value="6">6 dias</option>
+                        <option value="7">7 dias</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nivelExperiencia">Nível de Experiência:</label>
+                    <select id="nivelExperiencia">
+                        <option value="iniciante">Iniciante</option>
+                        <option value="intermediario">Intermediário</option>
+                        <option value="avancado">Avançado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="temLesao">Tem alguma lesão?</label>
+                    <select id="temLesao">
+                        <option value="false">Não</option>
+                        <option value="true">Sim</option>
+                    </select>
+                </div>
+                <div class="form-group" id="campoLocalLesao">
+                    <label for="localLesao">Local da Lesão:</label>
+                    <select id="localLesao">
+                        <option value="">Selecione...</option>
+                        <option value="ombro">Ombro</option>
+                        <option value="joelho">Joelho</option>
+                        <option value="punho">Punho</option>
+                        <option value="cotovelo">Cotovelo</option>
+                        <option value="coluna">Coluna</option>
+                        <option value="lombar">Lombar</option>
+                        <option value="tornozelo">Tornozelo</option>
+                        <option value="quadril">Quadril</option>
+                    </select>
+                </div>
+                <div class="botoes-form">
+                    <button id="btnCancelarGerar" class="btnEditar">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </button>
+                    <button id="btnConfirmarGerar" class="btnGerar">
+                        <i class="fa-solid fa-check"></i> Gerar Treino
+                    </button>
+                </div>
+            </div>
+        </div>
+
+                        <!-- Lista de treinos do aluno -->
+                        <div id="listaTreinos">
+                            <h3 id="tituloTreinos">Treinos do Aluno</h3>
+                            <div id="cardsTreinos"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <span class="app-version">{{ app_version }}</span>
+    </footer>
+
+    <!-- Modal para adicionar exercício -->
+    <div id="modalAdicionarExercicio">
+        <div>
+            <h3>Adicionar Exercício</h3>
+            <div class="form-group">
+                <label for="selectDia">Dia do Treino:</label>
+                <select id="selectDia"></select>
+            </div>
+            <div class="form-group">
+                <label for="selectExercicio">Exercício:</label>
+                <select id="selectExercicio"></select>
+            </div>
+            <div class="form-group">
+                <label for="inputSeries">Séries:</label>
+                <input type="number" id="inputSeries" value="3" min="1">
+            </div>
+            <div class="form-group">
+                <label for="inputRepeticoes">Repetições:</label>
+                <input type="text" id="inputRepeticoes" value="12-15">
+            </div>
+            <div class="botoes-form">
+                <button id="btnCancelarAdicionarExercicio" class="btnEditar">
+                    <i class="fa-solid fa-xmark"></i> Cancelar
+                </button>
+                <button id="btnConfirmarAdicionarExercicio" class="btnGerar">
+                    <i class="fa-solid fa-check"></i> Adicionar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script id="treinos-data" type="application/json">{{ clientes|tojson|safe }}</script>
+    <script src="{{ url_for('static', filename='js/components/theme-toggle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/treinos.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,436 @@
+@charset "UTF-8";
+
+/* Configurações Globais e Variáveis */
+
+* {
+    font: 100% "Noto Sans", sans-serif;
+}
+
+:root {
+    --cor0: #2b333b;
+    --cor1: #25292e;
+    --cor2: #20252c;
+    --cor3: #171b20;
+    --cor4: #ff6b00;
+    --texto: #ffffff;
+    --textoSuave: rgba(255, 255, 255, 0.6);
+    --borda: rgba(255, 255, 255, 0.9);
+    --bordaSuave: rgba(255, 255, 255, 0.05);
+    --placeholder: rgba(255, 255, 255, 0.6);
+    --overlay: rgba(0, 0, 0, 0.80);
+    --sombraTexto: 0 0 3px rgba(0, 0, 0, 0.8);
+    --iconeFiltro: none;
+}
+
+:root[data-theme="light"] {
+    --cor0: #f5f7fa;
+    --cor1: #eef1f4;
+    --cor2: #ffffff;
+    --cor3: #e7ebf0;
+    --cor4: #ff6b00;
+    --texto: #14181f;
+    --textoSuave: rgba(20, 24, 31, 0.65);
+    --borda: rgba(20, 24, 31, 0.25);
+    --bordaSuave: rgba(20, 24, 31, 0.08);
+    --placeholder: rgba(20, 24, 31, 0.55);
+    --overlay: rgba(0, 0, 0, 0.45);
+    --sombraTexto: 0 0 3px rgba(0, 0, 0, 0.2);
+    --iconeFiltro: invert(1);
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background-color: var(--cor0);
+    color: var(--texto);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+main {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+}
+
+::placeholder {
+    color: var(--placeholder);
+}
+
+/* Cabeçalho */
+#cabeca {
+    height: 80px;
+    width: 100%;
+    background-color: var(--cor3);
+    display: flex;
+    top: 0%;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 20px;
+}
+
+#cabecaDireita {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* Conteúdo Geral e Layout da Lista */
+#conteudoGeral {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 18px;
+    padding: 20px 20px 0px 20px;
+}
+
+#cadastroClientes {
+    background-color: var(--cor2);
+    border: 1px solid var(--bordaSuave);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+#divTituloListaClientes {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+#pesquisaEBotao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.campoPesquisa {
+    position: relative;
+    width: 44px;
+    overflow: hidden;
+    transition: width 0.25s ease;
+    border-radius: 8px;
+    background-color: var(--cor0);
+    border: 1px solid var(--borda);
+}
+
+.campoPesquisa:hover,
+.campoPesquisa:focus-within {
+    width: 300px;
+}
+
+.campoPesquisa img {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    filter: var(--iconeFiltro);
+}
+
+.campoPesquisa input {
+    width: 100%;
+    padding-left: 40px;
+    padding-right: 8px;
+    box-sizing: border-box;
+}
+
+#pesquisaPagamentos {
+    font-size: 1em;
+    padding: 8px 16px;
+    background-color: transparent;
+    color: var(--texto);
+    border: none;
+    padding-left: 40px;
+}
+
+.campoPesquisa:not(:hover):not(:focus-within) #pesquisaPagamentos {
+    color: transparent;
+    caret-color: transparent;
+}
+
+.campoPesquisa:not(:hover):not(:focus-within) #pesquisaPagamentos::placeholder {
+    color: transparent;
+}
+
+#pesquisaPagamentos::placeholder {
+    color: var(--placeholder);
+}
+
+#tituloListaClientes {
+    color: var(--texto);
+    text-decoration: underline var(--cor4);
+    font-size: 2em;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Tabela de Pagamentos */
+#conteudoTabelaListaClientes {
+    flex: 1;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: var(--cor2);
+    border-radius: 16px;
+    padding: 0;
+}
+
+#tabelaListaClientes {
+    width: 100%;
+    background-color: transparent;
+    color: var(--texto);
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: auto;
+}
+
+#tabelaListaClientes td,
+#tabelaListaClientes tr {
+    word-break: break-word;
+}
+
+#cabecaTabelaClientes {
+    background-color: var(--cor3);
+    font-size: 1.3em;
+}
+
+#cabecaTabelaClientes th:first-child {
+    border-top-left-radius: 12px;
+}
+
+#cabecaTabelaClientes th:last-child {
+    border-top-right-radius: 12px;
+}
+
+#cabecaTabelaClientes th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--cor3);
+    height: 40px;
+    padding: 8px 10px;
+}
+
+#bodyTabelaListaClientes td {
+    border-right: 1px solid var(--bordaSuave);
+    border-bottom: 1px solid var(--bordaSuave);
+    width: min-content;
+    font-size: 1.1em;
+    padding: 0 10px 0 10px;
+}
+
+#bodyTabelaListaClientes tr:nth-child(even) {
+    background-color: var(--cor1);
+}
+
+#bodyTabelaListaClientes tr:nth-child(odd) {
+    background-color: var(--cor2);
+}
+
+.clienteIndividual {
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.clienteIndividual:hover {
+    background-color: var(--cor4) !important;
+    text-shadow: 0 0 3px black;
+    transform: translateY(-1px);
+}
+
+.clienteIndividual td {
+    height: 50px;
+}
+
+#colNome {
+    width: 300px;
+}
+
+#colPlano {
+    width: min-content;
+    text-align: center;
+}
+
+#colUltimo {
+    width: 110px;
+    text-align: center;
+}
+
+#colVencimento {
+    width: min-content;
+    text-align: center;
+}
+
+#colStatus {
+    width: 150px;
+    text-align: center;
+}
+
+.Status {
+    text-align: center;
+}
+
+.Pago,
+.Pendente,
+.Inadimplente {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.Pago {
+    background-color: #008000;
+    color: #2bff00 !important;
+}
+
+.Pendente {
+    background-color: #808000;
+    color: #fbff00 !important;
+}
+
+.Inadimplente {
+    background-color: #800000;
+    color: #ff0000 !important;
+}
+
+td {
+    text-align: center;
+}
+
+td.Nome,
+td.Observacoes {
+    text-align: left;
+}
+
+#conteudoPagamentos {
+    display: flex;
+    gap: 18px; /* Mesmo espaçamento que o conteudoGeral */
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+}
+
+#conteudoPagamentos > section {
+    flex: 1; /* Ambas as seções terão o mesmo tamanho */
+    min-width: 0;
+}
+
+#secaoNova {
+    background-color: var(--cor2); /* Mesmo fundo das outras seções */
+    border: 1px solid var(--bordaSuave);
+    border-radius: 16px;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+#cliente-nome-titulo {
+    font-size: 1.5em;
+    color: var(--texto);
+    text-decoration: underline var(--cor4);
+    margin-bottom: 16px;
+}
+
+.info-cliente p {
+    margin: 8px 0;
+    color: var(--texto);
+}
+
+.botao-pagamento {
+    flex: 1;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.botao-pagamento:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+footer {
+    height: 20px;
+    width: 100%;
+    background-color: var(--cor0);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.app-version {
+    font-size: 12px;
+    color: var(--textoSuave);
+}
+
+@media (max-width: 768px) {
+    #cabeca {
+        height: 60px !important;
+    }
+
+    main {
+        flex-direction: column;
+        height: auto;
+        min-height: calc(100vh - 60px - 60px);
+    }
+
+    /* Layout Mobile */
+    #conteudoGeral {
+        margin-bottom: 60px;
+        width: 100%;
+        padding: 14px;
+    }
+
+    #conteudoPagamentos {
+        flex-direction: column;
+    }
+
+    .campoPesquisa {
+        width: 100%;
+    }
+
+    .campoPesquisa:hover,
+    .campoPesquisa:focus-within {
+        width: 100%;
+    }
+
+    .campoPesquisa:not(:hover):not(:focus-within) #pesquisaPagamentos {
+        color: var(--texto);
+        caret-color: auto;
+    }
+
+    .campoPesquisa:not(:hover):not(:focus-within) #pesquisaPagamentos::placeholder {
+        color: var(--placeholder);
+    }
+
+    footer {
+        display: none;
+    }
+}

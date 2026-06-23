@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+
+<body>
+    <main class="login">
+        <section class="login-card">
+            <h1 class="login-titulo">Criar conta</h1>
+
+            {% if erro %}
+            <p class="login-erro">{{ erro }}</p>
+            {% endif %}
+
+            <form class="login-form" action="/cadastro" method="POST">
+                <label class="login-label" for="email">Email</label>
+                <input class="login-input" type="email" id="email" name="email" autocomplete="email" required>
+
+                <label class="login-label" for="senha">Senha</label>
+                <input class="login-input" type="password" id="senha" name="senha" autocomplete="new-password" required>
+
+                <label class="login-label" for="confirmar_senha">Confirmar senha</label>
+                <input class="login-input" type="password" id="confirmar_senha" name="confirmar_senha" autocomplete="new-password" required>
+
+                <button class="login-botao" type="submit">Cadastrar</button>
+            </form>
+
+            <div class="login-rodape">
+                <a class="login-link" href="/login">Já tenho conta</a>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

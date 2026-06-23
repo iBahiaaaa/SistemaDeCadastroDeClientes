@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipamentos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme_toggle.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--cor1);
+            color: var(--texto);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 50px);
+        }
+
+        #conteudoGeral {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .topoPagina {
+            margin-bottom: 20px;
+        }
+
+        .topoPagina h1 {
+            font-size: 2em;
+            color: var(--texto);
+        }
+
+        .card {
+            background-color: var(--cor3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--sombra);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--cor4);
+            border-radius: 5px;
+            background-color: var(--cor1);
+            color: var(--texto);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--cor4);
+            color: var(--texto);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .lista-equipamentos {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-equipamento {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--cor4);
+            border-radius: 8px;
+        }
+
+        .item-equipamento .nome {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .item-equipamento .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .status-disponivel {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .status-indisponivel {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+    <main>
+        {% include 'components/sidebar.html' %}
+
+        <section id="conteudoGeral">
+            <section class="topoPagina">
+                <h1>Equipamentos da Academia</h1>
+            </section>
+
+            <div class="card">
+                <h3>Adicionar Novo Equipamento</h3>
+                <form id="formAdicionarEquipamento">
+                    <div class="form-group">
+                        <label for="nomeEquipamento">Nome do Equipamento</label>
+                        <input type="text" id="nomeEquipamento" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Adicionar
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Lista de Equipamentos</h3>
+                <div id="listaEquipamentos" class="lista-equipamentos">
+                    <!-- Equipamentos serão carregados aqui -->
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <span class="app-version">{{ app_version }}</span>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/components/theme-toggle.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarEquipamentos();
+            
+            document.getElementById('formAdicionarEquipamento').addEventListener('submit', function(e) {
+                e.preventDefault();
+                adicionarEquipamento();
+            });
+        });
+
+        async function carregarEquipamentos() {
+            try {
+                const response = await fetch('/api/equipamentos');
+                const equipamentos = await response.json();
+                renderizarEquipamentos(equipamentos);
+            } catch (error) {
+                console.error('Erro ao carregar equipamentos:', error);
+            }
+        }
+
+        function renderizarEquipamentos(equipamentos) {
+            const container = document.getElementById('listaEquipamentos');
+            container.innerHTML = '';
+            
+            if (equipamentos.length === 0) {
+                container.innerHTML = '<p>Nenhum equipamento cadastrado.</p>';
+                return;
+            }
+            
+            equipamentos.forEach(eq => {
+                const div = document.createElement('div');
+                div.className = 'item-equipamento';
+                div.innerHTML = `
+                    <div class="nome">${eq.nome}</div>
+                    <span class="status ${eq.disponivel ? 'status-disponivel' : 'status-indisponivel'}">
+                        ${eq.disponivel ? 'Disponível' : 'Indisponível'}
+                    </span>
+                    <div class="acoes">
+                        <button class="btn btn-warning" onclick="toggleDisponibilidade(${eq.id}, ${!eq.disponivel})">
+                            <i class="fas fa-toggle-on"></i>
+                        </button>
+                        <button class="btn btn-danger" onclick="excluirEquipamento(${eq.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function adicionarEquipamento() {
+            const nome = document.getElementById('nomeEquipamento').value.trim();
+            if (!nome) return;
+            
+            try {
+                const response = await fetch('/api/equipamentos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome: nome, disponivel: true })
+                });
+                
+                if (response.ok) {
+                    document.getElementById('nomeEquipamento').value = '';
+                    carregarEquipamentos();
+                }
+            } catch (error) {
+                console.error('Erro ao adicionar equipamento:', error);
+            }
+        }
+
+        async function toggleDisponibilidade(id, disponivel) {
+            try {
+                await fetch(`/api/equipamentos/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ disponivel: disponivel })
+                });
+                carregarEquipamentos();
+            } catch (error) {
+                console.error('Erro ao atualizar equipamento:', error);
+            }
+        }
+
+        async function excluirEquipamento(id) {
+            if (confirm('Tem certeza que deseja excluir este equipamento?')) {
+                try {
+                    await fetch(`/api/equipamentos/${id}`, { method: 'DELETE' });
+                    carregarEquipamentos();
+                } catch (error) {
+                    console.error('Erro ao excluir equipamento:', error);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

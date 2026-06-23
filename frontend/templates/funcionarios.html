@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funcionarios</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/funcionarios.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme_toggle.css') }}">
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+    <main>
+        {% include 'components/sidebar.html' %}
+
+        <section id="conteudoGeral">
+            <section class="topoPagina">
+                <div>
+                    <h1>Funcionários</h1>
+                </div>
+            </section>
+
+            {% if mensagem %}
+            <section class="alerta alerta-sucesso">{{ mensagem }}</section>
+            {% endif %}
+
+            {% if erro %}
+            <section class="alerta alerta-erro">{{ erro }}</section>
+            {% endif %}
+
+            <section class="painelUsuarios">
+        <div class="painelCabecalho">
+            <div class="pesquisaFuncionarios">
+                <div class="campoPesquisa">
+                    <img src="{{ url_for('static', filename='imagens/pesquisar.svg') }}" alt="Pesquisar">
+                    <input type="text" id="pesquisaFuncionarios" placeholder="Pesquisar funcionário...">
+                </div>
+            </div>
+            <span id="contadorUsuarios">{{ usuarios|length }} cadastrados</span>
+        </div>
+
+        <div class="listaUsuarios" id="listaUsuarios">
+        </div>
+    </section>
+
+            <script id="funcionarios-data" type="application/json">
+            {{ usuarios|tojson|safe }}
+            </script>
+            <script id="cargos-data" type="application/json">
+            {{ cargos|tojson|safe }}
+            </script>
+        </section>
+    </main>
+    <footer>
+        <span class="app-version">{{ app_version }}</span>
+    </footer>
+    <script src="{{ url_for('static', filename='js/components/theme-toggle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/funcionarios.js') }}"></script>
+</body>
+
+</html>

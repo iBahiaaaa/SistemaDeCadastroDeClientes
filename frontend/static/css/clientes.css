@@ -1,0 +1,982 @@
+@charset "UTF-8";
+
+/* Configurações Globais e Variáveis */
+
+* {
+    font: 100% "Noto Sans", sans-serif;
+}
+
+:root {
+    --cor0: #2b333b;
+    --cor1: #25292e;
+    --cor2: #20252c;
+    --cor3: #171b20;
+    --cor4: #ff6b00;
+    --texto: #ffffff;
+    --textoSuave: rgba(255, 255, 255, 0.6);
+    --borda: rgba(255, 255, 255, 0.9);
+    --bordaSuave: rgba(255, 255, 255, 0.05);
+    --placeholder: rgba(255, 255, 255, 0.6);
+    --overlay: rgba(0, 0, 0, 0.80);
+    --sombraTexto: 0 0 3px rgba(0, 0, 0, 0.8);
+    --iconeFiltro: none;
+}
+
+:root[data-theme="light"] {
+    --cor0: #f5f7fa;
+    --cor1: #eef1f4;
+    --cor2: #ffffff;
+    --cor3: #e7ebf0;
+    --cor4: #ff6b00;
+    --texto: #14181f;
+    --textoSuave: rgba(20, 24, 31, 0.65);
+    --borda: rgba(20, 24, 31, 0.25);
+    --bordaSuave: rgba(20, 24, 31, 0.08);
+    --placeholder: rgba(20, 24, 31, 0.55);
+    --overlay: rgba(0, 0, 0, 0.45);
+    --sombraTexto: 0 0 3px rgba(0, 0, 0, 0.2);
+    --iconeFiltro: invert(1);
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background-color: var(--cor0);
+    color: var(--texto);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+main {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+}
+
+::placeholder {
+    color: var(--placeholder);
+}
+
+/* Cabeçalho */
+#cabeca {
+    height: 80px;
+    width: 100%;
+    background-color: var(--cor3);
+    display: flex;
+    top: 0%;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 20px;
+}
+
+#cabecaDireita {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* Conteúdo Geral e Layout da Lista */
+#conteudoGeral {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 18px;
+    padding: 20px 20px 0px 20px;
+}
+
+#cadastroClientes {
+    background-color: var(--cor2);
+    border: 1px solid var(--bordaSuave);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+#divTituloListaClientes {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+#pesquisaEBotao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.campoPesquisa {
+    position: relative;
+    width: 44px;
+    overflow: hidden;
+    transition: width 0.25s ease;
+    border-radius: 8px;
+    background-color: var(--cor0);
+    border: 1px solid var(--borda);
+}
+
+.campoPesquisa:hover,
+.campoPesquisa:focus-within {
+    width: 300px;
+}
+
+.campoPesquisa img {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    filter: var(--iconeFiltro);
+}
+
+.campoPesquisa input {
+    width: 100%;
+    padding-left: 40px;
+    padding-right: 8px;
+    box-sizing: border-box;
+}
+
+#pesquisaClientes {
+    font-size: 1em;
+    padding: 8px 16px;
+    background-color: transparent;
+    color: var(--texto);
+    border: none;
+    padding-left: 40px;
+}
+
+.campoPesquisa:not(:hover):not(:focus-within) #pesquisaClientes {
+    color: transparent;
+    caret-color: transparent;
+}
+
+.campoPesquisa:not(:hover):not(:focus-within) #pesquisaClientes::placeholder {
+    color: transparent;
+}
+
+#pesquisaClientes::placeholder {
+    color: var(--placeholder);
+}
+
+#tituloListaClientes {
+    color: var(--texto);
+    text-decoration: underline var(--cor4);
+    font-size: 2em;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Tabela de Clientes */
+#conteudoTabelaListaClientes {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: var(--cor2);
+    border: 1px solid var(--bordaSuave);
+    border-radius: 16px;
+    padding: 0;
+}
+
+#tabelaListaClientes {
+    width: 100%;
+    background-color: transparent;
+    color: var(--texto);
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: auto;
+}
+
+#tabelaListaClientes td,
+#tabelaListaClientes tr {
+    word-break: break-word;
+}
+
+#cabecaTabelaClientes {
+    background-color: var(--cor3);
+    font-size: 1.3em;
+}
+
+#cabecaTabelaClientes th:first-child {
+    border-top-left-radius: 12px;
+}
+
+#cabecaTabelaClientes th:last-child {
+    border-top-right-radius: 12px;
+}
+
+#cabecaTabelaClientes th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--cor3);
+    height: 40px;
+    padding: 8px 10px;
+}
+
+#bodyTabelaListaClientes td {
+    border-right: 1px solid var(--bordaSuave);
+    border-bottom: 1px solid var(--bordaSuave);
+    width: min-content;
+    font-size: 1.1em;
+    padding: 0 10px 0 10px;
+}
+
+#bodyTabelaListaClientes tr:nth-child(even) {
+    background-color: var(--cor1);
+}
+
+#bodyTabelaListaClientes tr:nth-child(odd) {
+    background-color: var(--cor2);
+}
+
+.clienteIndividual {
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.clienteIndividual:hover {
+    background-color: var(--cor4) !important;
+    text-shadow: 0 0 3px black;
+    transform: translateY(-1px);
+}
+
+.clienteIndividual td {
+    height: 50px;
+}
+
+td#nomeCliente {
+    width: 250px;
+}
+
+#colNome {
+    width: 400px;
+}
+
+#colWhatsapp {
+    width: 180px;
+    text-align: center;
+}
+
+#colMatricula {
+    width: 150px;
+    text-align: center;
+}
+
+
+#colPlano {
+    width: 150px;
+    text-align: center;
+}
+
+#colVencimento {
+    width: 110px;
+    text-align: center;
+}
+
+#colStatus {
+    width: 150px;
+    text-align: center;
+}
+
+.whatsapp-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.whatsapp-link {
+    color: #25D366;
+    font-size: 1.2em;
+    transition: transform 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.whatsapp-link:hover {
+    color: #128C7E;
+    transform: scale(1.2);
+}
+
+/* Botões de Ação na Tabela (Removidos em favor do clique na linha) */
+#tabelaAcoes,
+#btnAcoes {
+    display: none !important;
+}
+
+/* Botão Cadastrar Cliente */
+#botaoCadastrar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-start;
+    color: #171b20;
+    border: 2px solid #2bff00;
+    border-radius: 8px;
+    padding: 8px 9px;
+    background: #2bff00;
+    font-size: 1em;
+    cursor: pointer;
+    width: 44px;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: width 0.25s ease, background-color 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+#botaoCadastrar:hover,
+#botaoCadastrar:focus-within {
+    background-color: #128c7e;
+    border-color: #128c7e;
+    width: 210px;
+    transform: scale(1.05);
+}
+
+#botaoCadastrar img {
+    filter: brightness(0) saturate(100%);
+}
+
+#botaoCadastrar span {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    font-weight: bolder;
+}
+
+#botaoCadastrar:hover span,
+#botaoCadastrar:focus-within span {
+    opacity: 1;
+}
+
+/* Inputs e Formulários */
+.input {
+    color: var(--texto);
+    border: 2px solid var(--cor4);
+    border-radius: 8px;
+    padding: 10px 25px;
+    background: transparent;
+    font-size: 1em;
+    margin: 3px;
+}
+
+/* Modal e Overlay */
+#modalCadastro {
+    display: none;
+}
+
+#modalCadastro.ativo {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+    max-height: 90vh;
+    width: 810px;
+    background-color: var(--cor3);
+    z-index: 10000;
+    border-radius: 12px;
+    box-shadow: 3px 3px 10px black;
+    padding: 20px;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.modal-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.modal-row>input,
+.modal-row>select {
+    flex: 1;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 5px;
+}
+
+.input-group label {
+    color: var(--texto);
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+#overlayModal {
+    display: none;
+}
+
+#overlayModal.ativo {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: var(--overlay);
+    z-index: 9999;
+}
+
+/* Modal de Pagamento Completo */
+#modalPagamento {
+    display: none;
+}
+
+#modalPagamento.ativo {
+    display: flex;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+    max-height: 90vh;
+    width: 650px;
+    background-color: var(--cor3);
+    z-index: 10001;
+    border-radius: 12px;
+    box-shadow: 3px 3px 10px black;
+    padding: 30px;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+#caixaModalPagamento h2 {
+    margin: 0;
+    color: var(--texto);
+    text-decoration: underline var(--cor4);
+    text-align: center;
+}
+
+#caixaModalPagamento .modal-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+#caixaModalPagamento .modal-row > .input-group {
+    flex: 1;
+}
+
+#caixaModalPagamento .input-group label {
+    color: var(--texto);
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#caixaModalPagamento input,
+#caixaModalPagamento select,
+#caixaModalPagamento textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background-color: var(--cor1);
+    border: 1px solid var(--borda);
+    color: var(--texto);
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+#caixaModalPagamento textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+#caixaModalPagamento input::placeholder,
+#caixaModalPagamento textarea::placeholder {
+    color: var(--placeholder);
+}
+
+#secaoInadimplente {
+    background-color: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+#botoesModalPagamento {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#btnCancelarPagamentoModal {
+    background-color: transparent;
+    color: var(--textoSuave);
+    border: 1px solid var(--bordaSuave);
+    border-radius: 8px;
+    padding: 12px 25px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#btnCancelarPagamentoModal:hover {
+    background-color: var(--bordaSuave);
+    color: var(--texto);
+}
+
+#btnConfirmarPagamentoModal {
+    background-color: var(--cor4);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1em;
+    font-weight: bolder;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#btnConfirmarPagamentoModal:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+#modalTitulo {
+    text-align: center;
+    color: var(--texto);
+    text-decoration: underline var(--cor4);
+    font-size: 1.8em;
+}
+
+#modalNome,
+#modalEmail,
+#modalWhatsapp,
+#modalEndereco,
+#modalEmergencia,
+#modalPlano,
+#modalValorPlano,
+#modalStatus,
+#modalMatricula,
+#modalVencimento,
+#modalUltimoPagamento,
+#modalAtivacaoCodigo,
+#modalObservacoes {
+    border-radius: 6px;
+    font-weight: 550;
+    font-size: 1em;
+    padding: 8px;
+    background-color: var(--cor0);
+    color: var(--texto);
+    border: 1px solid var(--borda);
+}
+
+#rowAtivacao {
+    display: none;
+}
+
+#modalObservacoes {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+}
+
+#botoesModal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+#botoesDireitaModal {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+}
+
+#linkWppEmergencia {
+    position: absolute;
+    right: 28px;
+    padding-top: 10px;
+    display: none;
+}
+
+#btnExcluirModal {
+    display: none;
+}
+
+#formExcluirOculto,
+#formPagamentoOculto {
+    display: none;
+}
+
+
+
+#btnConfirmarPagamento {
+    background-color: #2bff00;
+    color: #171b20;
+    border: 2px solid #2bff00;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    display: none;
+    align-items: center;
+    gap: 8px;
+}
+
+#btnConfirmarPagamento:hover {
+    background-color: #128c7e;
+    border-color: #128c7e;
+    transform: scale(1.05);
+}
+
+.btnExcluir,
+#btnCancelar {
+    background-color: #ff0000;
+    color: white;
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btnExcluir:hover,
+#btnCancelar:hover {
+    background-color: #cc0000;
+    border-color: #cc0000;
+    transform: scale(1.05);
+}
+
+#btnSalvar {
+    background-color: #2bff00;
+    color: #171b20;
+    border: 2px solid #2bff00;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#btnSalvar:hover {
+    background-color: #128c7e;
+    border-color: #128c7e;
+    transform: scale(1.05);
+}
+
+/* Cores de Status */
+
+.Status {
+    text-align: center;
+}
+
+.Pago,
+.Pendente,
+.Inadimplente {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.Pago {
+    background-color: #008000;
+    color: #2bff00 !important;
+}
+
+.Pendente {
+    background-color: #808000;
+    color: #fbff00 !important;
+}
+
+.Inadimplente {
+    background-color: #800000;
+    color: #ff0000 !important;
+}
+
+td {
+    text-align: center;
+}
+
+td.Nome,
+td.Observacoes {
+    text-align: left;
+}
+
+.btn-pagamento {
+    background-color: #2bff00;
+    color: #171b20;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-pagamento:hover {
+    background-color: #128C7E;
+    transform: scale(1.1);
+}
+
+.btn-pagamento i {
+    font-size: 1em;
+}
+
+/* Footer */
+footer {
+    height: 20px;
+    width: 100%;
+    background-color: var(--cor0);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.app-version {
+    font-size: 12px;
+    color: var(--textoSuave);
+}
+
+/* Responsividade Mobile */
+@media (max-width: 768px) {
+    #cabeca {
+        height: 60px !important;
+    }
+
+    main {
+        flex-direction: column;
+        height: auto;
+        min-height: calc(100vh - 60px - 60px);
+    }
+
+    /* Layout Mobile */
+    #conteudoGeral {
+        margin-bottom: 60px;
+        width: 100%;
+    }
+
+    #cadastroClientes {
+        margin: 10px;
+        padding: 10px;
+        height: auto;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #tituloListaClientes {
+        font-size: 1.5em;
+        position: static;
+        transform: none;
+        margin-bottom: 10px;
+    }
+
+    #divTituloListaClientes {
+        flex-direction: column;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .campoPesquisa {
+        width: 100%;
+    }
+
+    .campoPesquisa:hover,
+    .campoPesquisa:focus-within {
+        width: 100%;
+    }
+
+    .campoPesquisa:not(:hover):not(:focus-within) #pesquisaClientes {
+        color: var(--texto);
+        caret-color: auto;
+    }
+
+    .campoPesquisa:not(:hover):not(:focus-within) #pesquisaClientes::placeholder {
+        color: var(--placeholder);
+    }
+
+    #botaoCadastrar {
+        width: 40px !important;
+        position: fixed;
+        right: 10px;
+        bottom: 70px;
+        border-color: transparent;
+        background-color: var(--cor4);
+        z-index: 1001;
+    }
+
+    #botaoCadastrar:hover {
+        width: 40px !important;
+    }
+
+
+    #conteudoTabelaListaClientes {
+        margin-left: 0;
+        margin-right: 0;
+        padding: 0 10px;
+        height: auto;
+        overflow-y: visible;
+        overflow-x: hidden;
+    }
+
+    /* Tabela Mobile */
+    #tabelaListaClientes {
+        display: block;
+        width: 100%;
+        border: none;
+    }
+
+    #cabecaTabelaClientes {
+        display: none;
+    }
+
+    #bodyTabelaListaClientes {
+        display: block;
+        width: 100%;
+        background-color: var(--cor0);
+    }
+
+    .clienteIndividual {
+        display: block;
+        width: 100%;
+        margin-bottom: 20px;
+        background-color: var(--cor2);
+        border: 1px solid var(--cor3);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .clienteIndividual:hover {
+        background-color: transparent !important;
+        text-shadow: var(--sombraTexto);
+    }
+
+    .clienteIndividual td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 10px 15px;
+        border: none;
+        border-bottom: 1px solid var(--bordaSuave);
+        width: 100% !important;
+        box-sizing: border-box;
+        text-align: right;
+        min-height: 40px;
+        height: auto !important;
+        gap: 10px;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    .clienteIndividual td:last-child {
+        border-bottom: none;
+    }
+
+    /* O primeiro TD (Nome) vira o cabeçalho do card */
+    .clienteIndividual td:first-child {
+        background-color: var(--cor4);
+        color: white;
+        font-weight: bold;
+        font-size: 1.2em;
+        justify-content: flex-start;
+        text-align: left;
+        border-bottom: none;
+        padding: 12px 15px;
+    }
+
+    .clienteIndividual td:first-child::before {
+        content: none;
+    }
+
+    .clienteIndividual td::before {
+        content: attr(data-label);
+        font-weight: normal;
+        color: var(--textoSuave);
+        text-align: left;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+
+    .whatsapp-cell {
+        justify-content: flex-end;
+    }
+
+    /* Modal Mobile */
+    #modalCadastro.ativo {
+        width: 95% !important;
+        padding: 15px;
+    }
+
+    .modal-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #modalNome,
+    #modalWhatsapp,
+    #modalEndereco,
+    #modalEmergencia,
+    #modalPlano,
+    #modalValorPlano,
+    #modalStatus,
+    #modalMatricula,
+    #modalVencimento,
+    #modalUltimoPagamento,
+    #modalObservacoes {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    #botoesModal {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #botoesDireitaModal {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #linkWppEmergencia {
+        position: absolute;
+        right: 10px;
+        padding-top: 10px;
+        top: 238px;
+    }
+
+    #btnSalvar,
+    #btnCancelar,
+    .btnExcluir {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    footer {
+        display: none;
+    }
+}

@@ -1,0 +1,132 @@
+<style>
+#barraLateral {
+    background-color: var(--cor2);
+    width: 60px;
+    height: 100%;
+    transition: width 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border-bottom-right-radius: 10px;
+}
+
+#barraLateral h1 {
+    font-size: 1.7em;
+    color: var(--texto);
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-shadow: var(--sombraTexto);
+    height: 50px;
+    margin: 0 0 10px 0;
+    border-bottom-right-radius: 10px;
+}
+
+#barraLateral .sidebar-link {
+    font-size: 1.7em;
+    color: var(--texto);
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-shadow: var(--sombraTexto);
+    height: 50px;
+    margin: 0 0 10px 0;
+    text-decoration: none;
+    border-bottom-right-radius: 10px;
+}
+
+#barraLateral h1:hover {
+    background-color: var(--cor4);
+}
+
+#barraLateral .sidebar-link:hover {
+    background-color: var(--cor4);
+}
+
+#barraLateral img {
+    margin-left: 15px;
+    margin-right: 30px;
+    filter: var(--iconeFiltro);
+}
+
+#barraLateral:hover {
+    width: 250px;
+}
+
+#barraLateral:hover img {
+    margin-right: 30px;
+}
+
+#paginaAtual {
+    background-color: var(--cor4);
+    border-bottom-right-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    #barraLateral {
+        width: 100% !important;
+        height: 60px !important;
+        position: fixed;
+        margin: 0;
+        bottom: 0;
+        left: 0;
+        flex-direction: row !important;
+        justify-content: space-around;
+        z-index: 1000;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    #barraLateral div {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    #barraLateral h1 {
+        font-size: 0 !important;
+        margin: 0 !important;
+        padding: 10px !important;
+        flex: 1;
+        justify-content: center;
+    }
+
+    #barraLateral img {
+        margin: 0 !important;
+        width: 30px;
+        height: 30px;
+    }
+}
+</style>
+<section id="barraLateral">
+    <div>
+        <a class="sidebar-link" {% if request.path=='/' %}id="paginaAtual" {% endif %} href="/">
+            <img src="{{ url_for('static', filename='imagens/group.svg') }}" alt="Clientes">
+            Clientes
+        </a>
+        <h1><img src="{{ url_for('static', filename='imagens/card.svg') }}" alt="Planos">Planos</h1>
+        <a class="sidebar-link" {% if request.path=='/pagamentos' %}id="paginaAtual" {% endif %} href="/pagamentos">
+            <img src="{{ url_for('static', filename='imagens/money.svg') }}" alt="Pagamentos">
+            Pagamentos
+        </a>
+        <h1><img src="{{ url_for('static', filename='imagens/warning.svg') }}" alt="Inadimplência">Inadimplência</h1>
+        <a class="sidebar-link" {% if request.path=='/treinos' %}id="paginaAtual" {% endif %} href="/treinos">
+            <img src="{{ url_for('static', filename='imagens/halter.svg') }}" alt="Treinos">
+            Treinos
+        </a>
+        <a class="sidebar-link" {% if request.path=='/equipamentos' %}id="paginaAtual" {% endif %} href="/equipamentos">
+            <img src="{{ url_for('static', filename='imagens/settings.svg') }}" alt="Equipamentos">
+            Equipamentos
+        </a>
+        <h1><img src="{{ url_for('static', filename='imagens/prancheta.svg') }}" alt="Avaliação">Avaliação</h1>
+        <h1><img src="{{ url_for('static', filename='imagens/personCheck.svg') }}" alt="Frequência">Frequência</h1>
+        <a class="sidebar-link" {% if request.path=='/funcionarios' %}id="paginaAtual" {% endif %} href="/funcionarios">
+            <img src="{{ url_for('static', filename='imagens/work.svg') }}" alt="Funcionários">
+            Funcionários
+        </a>
+        <h1><img src="{{ url_for('static', filename='imagens/relatorios.svg') }}" alt="Relatórios">Relatórios</h1>
+        <h1><img src="{{ url_for('static', filename='imagens/settings.svg') }}" alt="Configuração">Configuração</h1>
+    </div>
+</section>

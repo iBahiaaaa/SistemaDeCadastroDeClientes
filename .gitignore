@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+
+# Database
+backend/database/banco.db
+*.sqlite3
+*.db
+*.sql
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.sln
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme_toggle.css') }}">
+    <link rel="shortcut icon" href="../static/imagens/person_add.svg" type="image/x-icon">
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+    <main>
+        {% include 'components/sidebar.html' %}
+        <section id="conteudoGeral">
+            <section id="cadastroClientes">
+                <div id="divTituloListaClientes">
+                    <h2 id="tituloListaClientes">Clientes Cadastrados</h2>
+                    <div id="pesquisaEBotao">
+                        <div class="campoPesquisa">
+                            <img src="{{ url_for('static', filename='imagens/pesquisar.svg') }}" alt="Pesquisar">
+
+                            <input type="text" id="pesquisaClientes" placeholder="Pesquisar aluno...">
+                        </div>
+                        <button title="Cadastrar novo cliente" id="botaoCadastrar" type="submit">
+                            <img src="../static/imagens/person_add.svg" alt="">
+                            <span id="cadastrarNovoCliente">Cadastrar cliente</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <div id="conteudoTabelaListaClientes">
+                <table id="tabelaListaClientes">
+                    <thead id="cabecaTabelaClientes">
+                        <tr>
+                            <th id="colNome">Nome</th>
+                            <th id="colWhatsapp">Whatsapp</th>
+                            <th id="colMatricula">Matricula</th>
+                            <th id="colPlano">Plano</th>
+                            <th id="colVencimento">Vencimento</th>
+                            <th id="colStatus">Status</th>
+                            <th>Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTabelaListaClientes">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <span class="app-version">{{ app_version }}</span>
+    </footer>
+    <section id="modalCadastro">
+        <div id="caixaModal">
+            <h2 id="modalTitulo">Cadastrar Cliente</h2>
+            <form action="/cadastrar" method="POST">
+                <input type="hidden" name="id_cliente" id="id_cliente">
+                <div class="modal-row">
+                    <input type="text" id="modalNome" name="nome" placeholder="Nome do aluno*" required>
+                    <input type="email" id="modalEmail" name="email" placeholder="Email de acesso">
+                    <input type="tel" id="modalWhatsapp" name="whatsapp" placeholder="Whatsapp">
+                </div>
+                <div class="modal-row" id="rowAtivacao">
+                    <div class="input-group">
+                        <label for="modalAtivacaoCodigo">Código de ativação</label>
+                        <input type="text" id="modalAtivacaoCodigo" disabled>
+                    </div>
+                </div>
+                <div class="modal-row">
+                    <input type="text" id="modalEndereco" name="endereco" placeholder="Endereço">
+                    <input type="text" id="modalEmergencia" name="contato_emergencia"
+                        placeholder="Contato de Emergência">
+                    <span id="linkWppEmergencia"><a href="#" target="_blank"
+                            class="whatsapp-link" onclick="event.stopPropagation();" title="Conversar no WhatsApp">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a></span>
+                </div>
+                <div class="modal-row">
+                    <input type="number" id="modalIdade" name="idade" placeholder="Idade">
+                    <input type="number" step="0.1" id="modalPeso" name="peso" placeholder="Peso (kg)">
+                    <input type="number" step="0.1" id="modalAltura" name="altura" placeholder="Altura (cm)">
+                </div>
+                <div class="modal-row">
+                    <input type="text" id="modalObjetivo" name="objetivo" placeholder="Objetivo (ex: Hipertrofia)">
+                    <input type="text" id="modalValorPlano" name="valor_plano" placeholder="Valor do Plano">
+                    <select id="modalPlano" name="plano">
+                        <option value="mensal">Mensal</option>
+                        <option value="trimestral">Trimestral</option>
+                        <option value="semestral">Semestral</option>
+                        <option value="anual">Anual</option>
+                    </select>
+                    <select id="modalStatus" name="status">
+                        <option value="Pago">Pago</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Inadimplente">Inadimplente</option>
+                    </select>
+                </div>
+                <div class="modal-row">
+                    <div class="input-group">
+                        <label for="modalMatricula">Data Matricula</label>
+                        <input type="date" id="modalMatricula" name="data_matricula">
+                    </div>
+                    <div class="input-group">
+                        <label for="modalUltimoPagamento">Último Pagamento</label>
+                        <input type="date" id="modalUltimoPagamento" name="ultimo_pagamento" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label for="modalVencimento">Data Vencimento</label>
+                        <input type="date" id="modalVencimento" name="data_vencimento">
+                    </div>
+                </div>
+                <textarea id="modalObservacoes" name="observacoes" placeholder="Observações"></textarea>
+                <div id="botoesModal">
+                    <button type="button" id="btnExcluirModal" class="btnExcluir">Excluir</button>
+                    <div id="botoesDireitaModal">
+                        <button type="button" id="btnConfirmarPagamento" title="Confirmar Pagamento">
+                            <i class="fa-solid fa-check"></i> Confirmar Pagamento
+                        </button>
+                        <button type="submit" id="btnSalvar">Salvar</button>
+                        <button type="button" id="btnCancelar">Fechar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <form id="formExcluirOculto" method="POST">
+    </form>
+    <form id="formPagamentoOculto" method="POST">
+        <input type="hidden" name="tipo_pagamento" id="tipoPagamento" value="atual">
+    </form>
+    
+    <!-- Modal de Pagamento Completo -->
+    <section id="modalPagamento">
+        <div id="caixaModalPagamento">
+            <h2>Confirmar Pagamento</h2>
+            <form id="formModalPagamento" method="POST">
+                <div class="modal-row">
+                    <div class="input-group">
+                        <label for="pagamentoValor">Valor do Plano</label>
+                        <input type="text" id="pagamentoValor" name="valor" placeholder="R$ 0,00">
+                    </div>
+                    <div class="input-group">
+                        <label for="pagamentoPlano">Plano</label>
+                        <select id="pagamentoPlano" name="plano">
+                            <option value="mensal">Mensal</option>
+                            <option value="trimestral">Trimestral</option>
+                            <option value="semestral">Semestral</option>
+                            <option value="anual">Anual</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-row">
+                    <div class="input-group">
+                        <label for="pagamentoData">Data do Pagamento</label>
+                        <input type="date" id="pagamentoData" name="data_pagamento">
+                    </div>
+                    <div class="input-group">
+                        <label for="pagamentoVencimento">Nova Data de Vencimento</label>
+                        <input type="date" id="pagamentoVencimento" name="data_vencimento">
+                    </div>
+                </div>
+                <textarea id="pagamentoObs" name="observacoes" placeholder="Observações sobre o pagamento (opcional)"></textarea>
+                
+                <!-- Seção de opções para inadimplentes (será mostrada se necessário) -->
+                <div id="secaoInadimplente" style="display: none;">
+                    <p style="color: #ff6b6b; font-weight: bold; margin-bottom: 10px;">
+                        ⚠️ Este cliente está inadimplente!
+                    </p>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="tipo_pagamento" id="opcaoAtual" value="atual" checked>
+                            Pagar apenas o mês atual
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="tipo_pagamento" id="opcaoTudo" value="tudo">
+                            Pagar todo o débito
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="botoesModalPagamento">
+                    <button type="button" id="btnCancelarPagamentoModal">Cancelar</button>
+                    <button type="submit" id="btnConfirmarPagamentoModal">
+                        <i class="fa-solid fa-check"></i> Confirmar Pagamento
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+    
+    <section id="overlayModal">
+    </section>
+    <script src="{{ url_for('static', filename='js/components/theme-toggle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/clientes.js') }}"></script>
+    <script id="clientes-data" type="application/json">
+    {{ clientes | tojson | safe }}
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            let clientesIniciais = JSON.parse(
+                document.getElementById('clientes-data').textContent
+            );
+
+            renderizarTabelaClientes(clientesIniciais);
+        });
+    </script>
+</body>
+
+</html>

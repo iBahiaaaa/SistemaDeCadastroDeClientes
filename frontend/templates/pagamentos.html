@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamentos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pagamentos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme_toggle.css') }}">
+    <link rel="shortcut icon" href="../static/imagens/person_add.svg" type="image/x-icon">
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+    <main>
+        {% include 'components/sidebar.html' %}
+        <section id="conteudoGeral">
+            <section id="cadastroClientes">
+                <div id="divTituloListaClientes">
+                    <h2 id="tituloListaClientes">Pagamentos</h2>
+                    <div id="pesquisaEBotao">
+                        <div class="campoPesquisa">
+                            <img src="{{ url_for('static', filename='imagens/pesquisar.svg') }}" alt="Pesquisar">
+                            <input type="text" id="pesquisaPagamentos" placeholder="Pesquisar cliente...">
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div id="conteudoPagamentos">
+        <section id="conteudoLista">
+            <div id="conteudoTabelaListaClientes">
+                <table id="tabelaListaClientes">
+                    <thead id="cabecaTabelaClientes">
+                        <tr>
+                            <th id="colNome">Cliente</th>
+                            <th id="colPlano">Plano</th>
+                            <th id="colVencimento">Vencimento</th>
+                            <th id="colUltimo"> Ultimo Pagamento</th>
+                            <th id="colStatus">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTabelaListaClientes">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section id="secaoNova">
+            <div id="cliente-selecionado" style="display: none;">
+                <h3 id="cliente-nome-titulo"></h3>
+                <div class="info-cliente" style="margin: 16px 0;">
+                    <p><strong>Plano:</strong> <span id="cliente-plano"></span></p>
+                    <p><strong>Valor:</strong> <span id="cliente-valor"></span></p>
+                    <p><strong>Data Vencimento:</strong> <span id="cliente-vencimento"></span></p>
+                    <p><strong>Último Pagamento:</strong> <span id="cliente-ultimo-pagamento"></span></p>
+                    <p><strong>Status:</strong> <span id="cliente-status"></span></p>
+                </div>
+                <div id="opcoes-pagamento" style="display: none;">
+                    <p style="color: #ff6b00; font-weight: bold;">Opções de Pagamento:</p>
+                    <div style="margin: 12px 0;">
+                        <label style="display: block; margin: 8px 0; cursor: pointer;">
+                            <input type="radio" name="tipo-pagamento-modal" id="pagamento-atual" value="atual" checked>
+                            <span>Pagar apenas o período atual</span>
+                        </label>
+                        <label style="display: block; margin: 8px 0; cursor: pointer;">
+                            <input type="radio" name="tipo-pagamento-modal" id="pagamento-tudo" value="tudo">
+                            <span>Pagar todos os períodos vencidos + atual</span>
+                        </label>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 24px;">
+                    <button id="btn-confirmar-pagamento" class="botao-pagamento" style="background: #008000;">
+                        <i class="fa-solid fa-check"></i> Confirmar Pagamento
+                    </button>
+                    <button id="btn-limpar-selecao" class="botao-pagamento" style="background: #808000;">
+                        <i class="fa-solid fa-xmark"></i> Limpar Seleção
+                    </button>
+                </div>
+            </div>
+            <div id="nenhum-cliente" style="text-align: center; color: var(--textoSuave); padding: 48px 16px;">
+                <i class="fa-solid fa-user" style="font-size: 48px; margin-bottom: 16px;"></i>
+                <p>Selecione um cliente na lista para ver os detalhes e confirmar pagamento</p>
+            </div>
+        </section>
+    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <span class="app-version">{{ app_version }}</span>
+    </footer>
+    <script src="{{ url_for('static', filename='js/components/theme-toggle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pagamentos.js') }}"></script>
+    <script id="pagamentos-data" type="application/json">
+        {{ pagamentos | tojson | safe }}
+    </script>
+</body>
+
+</html>
